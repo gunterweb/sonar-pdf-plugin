@@ -34,13 +34,20 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.resources.Project;
 import org.sonar.report.pdf.ExecutivePDFReporter;
 import org.sonar.report.pdf.PDFReporter;
+import org.sonar.report.pdf.PDFResources;
 import org.sonar.report.pdf.TeamWorkbookPDFReporter;
 import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonar.report.pdf.util.Credentials;
 
 import com.lowagie.text.DocumentException;
 
-public class PDFGenerator {
+/**
+ * 
+ *
+ */
+public class PDFGenerator implements PDFResources {
+
+	private static final String REPORT_PROPERTIES = "/report.properties";
 
 	private static final Logger LOG = LoggerFactory.getLogger(PDFGenerator.class);
 
@@ -71,13 +78,13 @@ public class PDFGenerator {
 				if (sonarHostUrl.endsWith("/")) {
 					sonarHostUrl = sonarHostUrl.substring(0, sonarHostUrl.length() - 1);
 				}
-				config.put("sonar.base.url", sonarHostUrl);
-				config.put("front.page.logo", "sonar.png");
+				config.put(SONAR_BASE_URL, sonarHostUrl);
+				config.put(FRONT_PAGE_LOGO, "sonar.png");
 			} else {
-				config.load(this.getClass().getResourceAsStream("/report.properties"));
+				config.load(this.getClass().getResourceAsStream(REPORT_PROPERTIES));
 			}
 
-			ResourceBundle rb = ResourceBundle.getBundle(PDFReporter.RESOURCE_NAME, Locale.getDefault(),
+			ResourceBundle rb = ResourceBundle.getBundle(RESOURCE_NAME, Locale.getDefault(),
 					this.getClass().getClassLoader());
 
 			Enumeration<String> keys = rb.getKeys();
@@ -86,25 +93,25 @@ public class PDFGenerator {
 				configLang.setProperty(key, (String) rb.getObject(key));
 			}
 
-			Credentials credentials = new Credentials(config.getProperty("sonar.base.url"), username, password);
+			Credentials credentials = new Credentials(config.getProperty(SONAR_BASE_URL), username, password);
 
 			String sonarProjectId = project.getEffectiveKey();
 			String path = fs.workDir().getAbsolutePath() + "/" + sonarProjectId.replace(':', '-') + ".pdf";
 
 			PDFReporter reporter = null;
 			if (reportType != null) {
-				if (reportType.equals("executive")) {
+				if ((EXECUTIVE_REPORT_TYPE).equals(reportType)) {
 					LOG.info("Executive report type selected");
-					reporter = new ExecutivePDFReporter(credentials, this.getClass().getResource("/sonar.png"),
+					reporter = new ExecutivePDFReporter(credentials, this.getClass().getResource(SONAR_PNG_FILE),
 							sonarProjectId, config, configLang);
-				} else if (reportType.equals("workbook")) {
+				} else if ((WORKBOOK_REPORT_TYPE).equals(reportType)) {
 					LOG.info("Team workbook report type selected");
-					reporter = new TeamWorkbookPDFReporter(credentials, this.getClass().getResource("/sonar.png"),
+					reporter = new TeamWorkbookPDFReporter(credentials, this.getClass().getResource(SONAR_PNG_FILE),
 							sonarProjectId, config, configLang);
 				}
 			} else {
 				LOG.info("No report type provided. Default report selected (Team workbook)");
-				reporter = new TeamWorkbookPDFReporter(credentials, this.getClass().getResource("/sonar.png"),
+				reporter = new TeamWorkbookPDFReporter(credentials, this.getClass().getResource(SONAR_PNG_FILE),
 						sonarProjectId, config, configLang);
 			}
 

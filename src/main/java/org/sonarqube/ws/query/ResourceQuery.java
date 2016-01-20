@@ -42,6 +42,7 @@ public class ResourceQuery extends Query<Resource> {
 	private Boolean verbose = Boolean.FALSE;
 
 	public ResourceQuery() {
+		super();
 	}
 
 	public ResourceQuery(String resourceKeyOrId) {

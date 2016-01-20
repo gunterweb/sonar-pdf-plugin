@@ -21,7 +21,7 @@ package org.sonarqube.ws.model;
 
 import java.util.Date;
 
-public class Comment extends Model {
+public class Comment implements Model {
 	private String key;
 	private String login;
 	private String htmlText;

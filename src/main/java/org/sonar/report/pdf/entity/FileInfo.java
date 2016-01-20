@@ -57,11 +57,11 @@ public class FileInfo {
 	public boolean isContentSet(final int content) {
 		boolean result = false;
 		if (content == VIOLATIONS_CONTENT) {
-			result = !this.getViolations().equals("0");
+			result = !("0").equals(this.getViolations());
 		} else if (content == CCN_CONTENT) {
-			result = !this.getComplexity().equals("0");
+			result = !("0").equals(this.getComplexity());
 		} else if (content == DUPLICATIONS_CONTENT) {
-			result = !this.getDuplicatedLines().equals("0");
+			result = !("0").equals(this.getDuplicatedLines());
 		}
 		return result;
 	}

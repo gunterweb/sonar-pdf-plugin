@@ -19,7 +19,7 @@
  */
 package org.sonarqube.ws.model;
 
-public class User extends Model {
+public class User implements Model {
 	private String login;
 	private String name;
 	private Boolean active;

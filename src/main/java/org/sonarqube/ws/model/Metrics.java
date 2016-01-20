@@ -22,7 +22,7 @@ package org.sonarqube.ws.model;
 import java.util.Collections;
 import java.util.List;
 
-public class Metrics extends Model {
+public class Metrics implements Model {
 	private List<Metric> metrics;
 
 	public List<Metric> getMetrics() {

@@ -33,51 +33,64 @@ public class Severity implements Comparable<Severity> {
 	public static final String CRITICAL = "CRITICAL";
 	public static final String BLOCKER = "BLOCKER";
 
-	public static String[] getSeverityArray() {
-		return new String[] { INFO, MINOR, MAJOR, CRITICAL, BLOCKER };
-	}
-
 	public Severity(String severity) {
 		this.severity = severity;
 	}
 
+	public static String[] getSeverityArray() {
+		return new String[] { INFO, MINOR, MAJOR, CRITICAL, BLOCKER };
+	}
+
 	private Integer getIntFromSeverity(Severity severity) {
+		int intValue;
 		switch (severity.getSeverity()) {
 		case INFO:
-			return 5;
-
+			intValue = 5;
+			break;
 		case MINOR:
-			return 4;
+			intValue = 4;
+			break;
 
 		case MAJOR:
-			return 3;
+			intValue = 3;
+			break;
 
 		case CRITICAL:
-			return 2;
+			intValue = 2;
+			break;
 
 		case BLOCKER:
-			return 1;
+			intValue = 1;
+			break;
 
 		default:
-			return 0;
+			intValue = 0;
 		}
+		return intValue;
 	}
 
 	public Color toColor() {
+		Color color;
 		switch (severity) {
 		case INFO:
-			return new Color(51, 255, 51);
+			color = new Color(51, 255, 51);
+			break;
 		case MINOR:
-			return new Color(153, 255, 51);
+			color = new Color(153, 255, 51);
+			break;
 		case MAJOR:
-			return new Color(255, 255, 51);
+			color = new Color(255, 255, 51);
+			break;
 		case CRITICAL:
-			return new Color(255, 153, 51);
+			color = new Color(255, 153, 51);
+			break;
 		case BLOCKER:
-			return new Color(255, 51, 51);
+			color = new Color(255, 51, 51);
+			break;
 		default:
-			return Color.WHITE;
+			color = Color.WHITE;
 		}
+		return color;
 	}
 
 	public String getSeverity() {
@@ -95,6 +108,20 @@ public class Severity implements Comparable<Severity> {
 		} else {
 			return getIntFromSeverity(this).compareTo(getIntFromSeverity(o));
 		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Severity) {
+			return getIntFromSeverity(this) == getIntFromSeverity((Severity) obj);
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }

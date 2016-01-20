@@ -19,7 +19,7 @@
  */
 package org.sonarqube.ws.model;
 
-public class Rule extends Model {
+public class Rule implements Model {
 	String key;
 	String name;
 	String status;

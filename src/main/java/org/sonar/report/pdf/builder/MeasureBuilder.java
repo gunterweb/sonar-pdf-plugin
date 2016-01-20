@@ -21,7 +21,11 @@ package org.sonar.report.pdf.builder;
 
 import org.sonar.report.pdf.entity.Measure;
 
-public class MeasureBuilder {
+public class MeasureBuilder extends AbstractBuilder {
+
+	private MeasureBuilder() {
+		super();
+	}
 
 	/**
 	 * Init measure from XML node. The root node must be "msr".

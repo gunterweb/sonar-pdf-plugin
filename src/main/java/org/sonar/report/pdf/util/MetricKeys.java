@@ -19,7 +19,7 @@
  */
 package org.sonar.report.pdf.util;
 
-public class MetricKeys {
+public interface MetricKeys {
 
 	public static final String PROFILE = "profile";
 	public static final String DUPLICATED_LINES = "duplicated_lines";

@@ -19,7 +19,7 @@
  */
 package org.sonarqube.ws.model;
 
-public class Attribut extends Model {
+public class Attribut implements Model {
 	private String jiraIssueKey;
 
 	public String getJiraIssueKey() {

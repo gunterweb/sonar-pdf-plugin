@@ -22,7 +22,7 @@ package org.sonarqube.ws.model;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 
-public class Metric extends Model {
+public class Metric implements Model {
 
 	private Integer id;
 	private String key;

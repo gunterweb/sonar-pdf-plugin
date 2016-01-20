@@ -19,7 +19,7 @@
  */
 package org.sonarqube.ws.model;
 
-public class Component extends Model {
+public class Component implements Model {
 	String key;
 	Boolean enabled;
 	String qualifier;

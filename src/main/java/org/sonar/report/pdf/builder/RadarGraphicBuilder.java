@@ -28,8 +28,8 @@ import org.sonar.report.pdf.entity.RadarGraphic;
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Image;
 
-public class RadarGraphicBuilder {
-
+public class RadarGraphicBuilder extends AbstractBuilder {
+	// TODO voir utilité
 	private static final Logger LOG = LoggerFactory.getLogger(RadarGraphicBuilder.class);
 
 	private static RadarGraphicBuilder builder;

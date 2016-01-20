@@ -25,9 +25,6 @@ public class ConnectionException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 5594732002932050667L;
 
-	public ConnectionException() {
-	}
-
 	public ConnectionException(String s) {
 		super(s);
 	}

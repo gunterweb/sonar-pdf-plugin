@@ -39,6 +39,10 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
 
+/**
+ * 
+ *
+ */
 public class Header extends PdfPageEventHelper {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Header.class);
@@ -62,7 +66,7 @@ public class Header extends PdfPageEventHelper {
 			head.addCell(logoImage);
 			Phrase projectName = new Phrase(project.getName(),
 					FontFactory.getFont(FontFactory.COURIER, 12, Font.NORMAL, Color.GRAY));
-			Phrase phrase = new Phrase("Sonar PDF Report",
+			Phrase phrase = new Phrase(PDFResources.SONAR_PDF_REPORT,
 					FontFactory.getFont(FontFactory.COURIER, 12, Font.NORMAL, Color.GRAY));
 			head.getDefaultCell().setColspan(2);
 			head.addCell(phrase);

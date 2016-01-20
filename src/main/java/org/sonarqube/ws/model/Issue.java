@@ -22,7 +22,7 @@ package org.sonarqube.ws.model;
 import java.util.Date;
 import java.util.List;
 
-public class Issue extends Model {
+public class Issue implements Model {
 	private String key;
 	private String component;
 	private String project;

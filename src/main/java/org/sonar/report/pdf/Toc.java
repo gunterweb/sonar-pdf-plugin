@@ -19,6 +19,10 @@
  */
 package org.sonar.report.pdf;
 
+/**
+ * 
+ *
+ */
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 
@@ -82,19 +86,15 @@ public class Toc extends PdfPageEventHelper {
 	public void onSection(final PdfWriter writer, final Document document, final float position, final int depth,
 			final Paragraph title) {
 		content.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_LEFT);
-		switch (depth) {
-		case 2:
+		if (depth == 2) {
 			content.getDefaultCell().setIndent(10);
 			content.addCell(new Phrase(title.getContent(), new Font(Font.HELVETICA, 10)));
-			content.getDefaultCell().setIndent(0);
-			content.addCell("");
-			break;
-		default:
+		} else {
 			content.getDefaultCell().setIndent(20);
 			content.addCell(new Phrase(title.getContent(), new Font(Font.HELVETICA, 9)));
-			content.getDefaultCell().setIndent(0);
-			content.addCell("");
 		}
+		content.getDefaultCell().setIndent(0);
+		content.addCell("");
 	}
 
 	@Override

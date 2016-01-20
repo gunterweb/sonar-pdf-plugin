@@ -54,8 +54,7 @@ import com.lowagie.text.pdf.PdfWriter;
  * used in yhe PDF document), the project key and the implementation of
  * printPdfBody method.
  */
-public abstract class PDFReporter {
-	public static final String RESOURCE_NAME = "report-texts";
+public abstract class PDFReporter implements PDFResources {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PDFReporter.class);
 
@@ -121,7 +120,7 @@ public abstract class PDFReporter {
 		if (project == null) {
 			WSClient sonar = WSClient.create(credentials.getUrl(), credentials.getUsername(),
 					credentials.getPassword());
-			ProjectBuilder projectBuilder = ProjectBuilder.getInstance(credentials, sonar);
+			ProjectBuilder projectBuilder = ProjectBuilder.getInstance(sonar);
 			project = projectBuilder.initializeProject(getProjectKey());
 		}
 		return project;
@@ -189,7 +188,7 @@ public abstract class PDFReporter {
 		}
 		Image tendencyImage = null;
 		try {
-			tendencyImage = Image.getInstance(this.getClass().getResource("/tendency/" + iconName));
+			tendencyImage = Image.getInstance(this.getClass().getResource(TENDENCY_DIR + iconName));
 		} catch (BadElementException | IOException e) {
 			LOG.error("Can not generate tendency image", e);
 		}

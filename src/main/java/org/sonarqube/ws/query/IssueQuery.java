@@ -28,7 +28,7 @@ import org.sonarqube.ws.internal.EncodingUtils;
 import org.sonarqube.ws.model.Issues;
 
 public class IssueQuery extends Query<Issues> {
-	private final Map<String, Object> params = new HashMap<String, Object>();
+	private final Map<String, Object> params = new HashMap<>();
 	private static final String BASE_URL = "/api/issues/search";
 
 	private IssueQuery() {
@@ -43,8 +43,8 @@ public class IssueQuery extends Query<Issues> {
 	public String getUrl() {
 		StringBuilder url = new StringBuilder(BASE_URL);
 		url.append('?');
-		for (String key : params.keySet()) {
-			appendUrlParameter(url, key, params.get(key));
+		for (Map.Entry<String, Object> entry : params.entrySet()) {
+			appendUrlParameter(url, entry.getKey(), entry.getValue());
 		}
 		return url.toString();
 	}

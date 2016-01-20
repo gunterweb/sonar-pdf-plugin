@@ -38,6 +38,10 @@ public class FileUploader {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PDFPostJob.class);
 
+	private FileUploader() {
+		super();
+	}
+
 	public static void upload(final File file, final String url, String username, String password) {
 		PostMethod filePost = new PostMethod(url);
 
@@ -61,9 +65,8 @@ public class FileUploader {
 			} else {
 				LOG.error("Something went wrong storing the PDF at server side. Status: " + status);
 			}
-		} catch (Exception ex) {
-			LOG.error("Something went wrong storing the PDF at server side", ex);
-			ex.printStackTrace();
+		} catch (Exception e) {
+			LOG.error("Something went wrong storing the PDF at server side", e);
 		} finally {
 			filePost.releaseConnection();
 		}

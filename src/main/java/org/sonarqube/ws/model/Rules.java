@@ -22,11 +22,11 @@ package org.sonarqube.ws.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rules extends Model {
+public class Rules implements Model {
 
-	private final List<Rule> rules = new ArrayList<Rule>();
-	private final List<Component> actives = new ArrayList<Component>();
-	private final List<User> facets = new ArrayList<User>();
+	private final List<Rule> rules = new ArrayList<>();
+	private final List<Component> actives = new ArrayList<>();
+	private final List<User> facets = new ArrayList<>();
 	private Paging paging;
 
 	public Paging getPaging() {

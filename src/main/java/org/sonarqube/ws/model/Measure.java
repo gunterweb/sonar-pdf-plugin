@@ -22,7 +22,7 @@ package org.sonarqube.ws.model;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 
-public class Measure extends Model {
+public class Measure implements Model {
 
 	private String key;
 	private String name;
@@ -45,7 +45,11 @@ public class Measure extends Model {
 	private String fvar4;
 	private String fvar5;
 
-	private Double variation1, variation2, variation3, variation4, variation5;
+	private Double variation1;
+	private Double variation2;
+	private Double variation3;
+	private Double variation4;
+	private Double variation5;
 
 	@CheckForNull
 	public String getKey() {

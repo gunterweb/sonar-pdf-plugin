@@ -19,7 +19,6 @@
  */
 package org.sonar.report.pdf.builder;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,14 +26,16 @@ import org.sonar.report.pdf.entity.FileInfo;
 import org.sonar.report.pdf.util.MetricKeys;
 import org.sonarqube.ws.model.Resource;
 
-public class FileInfoBuilder {
+public class FileInfoBuilder extends AbstractBuilder {
+
+	private FileInfoBuilder() {
+		super();
+	}
 
 	public static List<FileInfo> initFromDocument(final List<Resource> resources, final int content) {
-		List<FileInfo> fileInfoList = new LinkedList<FileInfo>();
+		List<FileInfo> fileInfoList = new LinkedList<>();
 		if (resources != null) {
-			Iterator<Resource> it = resources.iterator();
-			while (it.hasNext()) {
-				Resource fileNode = it.next();
+			for (Resource fileNode : resources) {
 				FileInfo fileInfo = new FileInfo();
 				initFromNode(fileInfo, fileNode, content);
 				if (fileInfo.isContentSet(content)) {

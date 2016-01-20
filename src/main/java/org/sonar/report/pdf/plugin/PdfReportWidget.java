@@ -27,15 +27,18 @@ import org.sonar.api.web.RubyRailsWidget;
  */
 public final class PdfReportWidget extends AbstractRubyTemplate implements RubyRailsWidget {
 
-  protected String getTemplatePath() {
-    return "/org/sonar/report/pdf/dashboard_widget.erb";
-  }
+	@Override
+	protected String getTemplatePath() {
+		return "/org/sonar/report/pdf/dashboard_widget.erb";
+	}
 
-  public String getId() {
-    return "pdf-report-widget";
-  }
+	@Override
+	public String getId() {
+		return "pdf-report-widget";
+	}
 
-  public String getTitle() {
-    return "PDF report widget";
-  }
+	@Override
+	public String getTitle() {
+		return "PDF report widget";
+	}
 }

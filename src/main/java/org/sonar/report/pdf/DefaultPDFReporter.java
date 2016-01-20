@@ -54,20 +54,26 @@ import com.lowagie.text.pdf.PdfWriter;
 /**
  * Concrete PDFReporter. Implements printPdfBody method. This will be the way to
  * extend PDFReport.
+ * 
+ * @deprecated use {@link ExecutivePDFReporter} or
+ *             {@link TeamWorkbookPDFReporter} instead
  */
+@Deprecated
 public class DefaultPDFReporter extends PDFReporter {
+
+	private static final String CCN_CLASSES_PERCENT_DISTRIBUTION = "ccn_classes_percent_distribution";
+
+	private static final String CCN_CLASSES_COUNT_DISTRIBUTION = "ccn_classes_count_distribution";
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultPDFReporter.class);
 
-	private static final String REPORT_TYPE_WORKBOOK = "workbook";
+	private final static int INDENTATION = 18;
+	private final static int TABLE_PADDING_BOTTOM = 5;
 
 	private URL logo;
 	private String projectKey;
 	private Properties configProperties;
 	private Properties langProperties;
-
-	private final static int indentation = 18;
-	private final static int tablePaddingBottom = 5;
 
 	private Document document;
 
@@ -209,10 +215,10 @@ public class DefaultPDFReporter extends PDFReporter {
 				measuresTable.getDefaultCell().setGrayFill(1);
 				colorEnabled = true;
 			}
-			if (!measureKey.equals("ccn_classes_count_distribution")
-					&& !measureKey.equals("ccn_classes_percent_distribution")) {
+			if (!measureKey.equals(CCN_CLASSES_COUNT_DISTRIBUTION)
+					&& !measureKey.equals(CCN_CLASSES_PERCENT_DISTRIBUTION)) {
 				measuresTable.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_LEFT);
-				measuresTable.addCell(super.getTextProperty("metrics." + measureKey));
+				measuresTable.addCell(super.getTextProperty(METRICS_CCN_CLASSES_COUNT_DISTRIBUTION));
 				measuresTable.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_CENTER);
 				measuresTable.addCell(measures.getMeasure(measureKey).getFormatValue());
 			}
@@ -226,7 +232,7 @@ public class DefaultPDFReporter extends PDFReporter {
 	private void formatTable(final PdfPTable table) {
 		Rectangle page = document.getPageSize();
 		table.getDefaultCell().setVerticalAlignment(PdfCell.ALIGN_MIDDLE);
-		table.getDefaultCell().setPaddingBottom(tablePaddingBottom);
+		table.getDefaultCell().setPaddingBottom(TABLE_PADDING_BOTTOM);
 		table.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_CENTER);
 		table.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
 		table.setSpacingBefore(20);
@@ -239,7 +245,7 @@ public class DefaultPDFReporter extends PDFReporter {
 		data.add(new ListItem(super.getTextProperty("general.modules") + ": "));
 
 		List sublist = new List();
-		if (project.getSubprojects().size() != 0) {
+		if (!project.getSubprojects().isEmpty()) {
 			Iterator<Project> it = project.getSubprojects().iterator();
 			while (it.hasNext()) {
 				sublist.add(new ListItem(it.next().getName()));
@@ -248,7 +254,7 @@ public class DefaultPDFReporter extends PDFReporter {
 			sublist.add(new ListItem(super.getTextProperty("general.no_modules")));
 		}
 
-		sublist.setIndentationLeft(indentation);
+		sublist.setIndentationLeft(INDENTATION);
 		data.add(sublist);
 		section.add(data);
 		printMeasures(project.getMeasures(), section);
@@ -277,10 +283,10 @@ public class DefaultPDFReporter extends PDFReporter {
 			throws ReportException {
 		try {
 			URL largeLogo;
-			if (super.getConfigProperty("front.page.logo").startsWith("http://")) {
-				largeLogo = new URL(super.getConfigProperty("front.page.logo"));
+			if (super.getConfigProperty(FRONT_PAGE_LOGO).startsWith("http://")) {
+				largeLogo = new URL(super.getConfigProperty(FRONT_PAGE_LOGO));
 			} else {
-				largeLogo = this.getClass().getClassLoader().getResource(super.getConfigProperty("front.page.logo"));
+				largeLogo = this.getClass().getClassLoader().getResource(super.getConfigProperty(FRONT_PAGE_LOGO));
 			}
 			Image logoImage = Image.getInstance(largeLogo);
 			Rectangle pageSize = frontPageDocument.getPageSize();
@@ -321,6 +327,6 @@ public class DefaultPDFReporter extends PDFReporter {
 
 	@Override
 	public String getReportType() {
-		return REPORT_TYPE_WORKBOOK;
+		return WORKBOOK_REPORT_TYPE;
 	}
 }

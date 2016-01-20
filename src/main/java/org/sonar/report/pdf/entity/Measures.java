@@ -21,7 +21,8 @@ package org.sonar.report.pdf.entity;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,11 +30,12 @@ import java.util.Set;
  */
 public class Measures {
 
-	private Hashtable<String, Measure> measuresTable = new Hashtable<String, Measure>();
+	private Map<String, Measure> measuresTable = new HashMap<>();
 	private Date date;
 	private String version = EntityUtils.NA_METRICS;
 
 	public Measures() {
+		super();
 	}
 
 	public Date getDate() {

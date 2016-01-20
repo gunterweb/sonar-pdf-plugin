@@ -44,7 +44,6 @@ import org.sonar.report.pdf.entity.Rule;
 import org.sonar.report.pdf.entity.Severity;
 import org.sonar.report.pdf.entity.Violation;
 import org.sonar.report.pdf.entity.exception.ReportException;
-import org.sonar.report.pdf.util.Credentials;
 import org.sonar.report.pdf.util.MetricKeys;
 import org.sonarqube.ws.client.WSClient;
 import org.sonarqube.ws.model.Issue;
@@ -54,7 +53,7 @@ import org.sonarqube.ws.query.IssueQuery;
 import org.sonarqube.ws.query.ResourceQuery;
 import org.sonarqube.ws.query.RuleQuery;
 
-public class ProjectBuilder {
+public class ProjectBuilder extends AbstractBuilder {
 
 	private static final Logger LOG = LoggerFactory.getLogger("org.sonar.PDF");
 
@@ -67,18 +66,18 @@ public class ProjectBuilder {
 
 	public ProjectBuilder(final WSClient sonar) {
 		this.sonar = sonar;
-		URL resourceText = this.getClass().getClassLoader().getResource("report.properties");
+		URL resourceText = this.getClass().getClassLoader().getResource(REPORT_PROPERTIES);
 		Properties config = new Properties();
 		try {
 			config.load(resourceText.openStream());
 		} catch (IOException e) {
-			LOG.error("\nProblem loading report.propeties.", e);
+			LOG.error("\nProblem loading report.properties.", e);
 		}
-		tableLimit = Integer.valueOf(config.getProperty("sonar.table.limit"));
-		detailsLimit = Integer.valueOf(config.getProperty("sonar.details.limit"));
+		tableLimit = Integer.valueOf(config.getProperty(SONAR_TABLE_LIMIT));
+		detailsLimit = Integer.valueOf(config.getProperty(SONAR_DETAILS_LIMIT));
 	}
 
-	public static ProjectBuilder getInstance(final Credentials credentials, final WSClient sonar) {
+	public static ProjectBuilder getInstance(final WSClient sonar) {
 		if (builder == null) {
 			return new ProjectBuilder(sonar);
 		}
@@ -106,7 +105,7 @@ public class ProjectBuilder {
 		rq.setDepth(0);
 		List<Resource> resources = sonar.findAll(rq);
 
-		if (resources != null && resources.size() > 0) {
+		if (resources != null && !resources.isEmpty()) {
 			initFromNode(project, resources.get(0));
 			initMeasures(project);
 			initMostViolatedRules(project);
@@ -128,7 +127,7 @@ public class ProjectBuilder {
 				Resource childNode = it.next();
 
 				String scope = childNode.getScope();
-				if (scope.equals("PRJ")) {
+				if (PROJECT_SCOPE.equals(scope)) {
 					Project childProject = initializeProject(childNode.getKey());
 					project.getSubprojects().add(childProject);
 				}
@@ -167,20 +166,19 @@ public class ProjectBuilder {
 		LOG.debug("Accessing Sonar: getting most violated rules");
 		String[] severities = Severity.getSeverityArray();
 
-		Map<String, IssueBean> issues = new HashMap<String, IssueBean>();
+		Map<String, IssueBean> issues = new HashMap<>();
 		ValueComparator bvc = new ValueComparator(issues);
-		TreeMap<String, IssueBean> sortedMap = new TreeMap<String, IssueBean>(bvc);
+		TreeMap<String, IssueBean> sortedMap = new TreeMap<>(bvc);
 		// Reverse iteration to get violations with upper level first
 		int limit = detailsLimit;
 		for (int i = severities.length - 1; i >= 0 && limit > 0; i--) {
-
 			IssueQuery query = IssueQuery.create();
 			query.componentKeys(project.getKey());
 			query.severities(severities[i]);
 			Issues result = sonar.find(query);
 			List<Issue> issuesByLevel = result.getIssues();
-			if (issuesByLevel != null && issuesByLevel.size() > 0) {
-				int count = initMostViolatedRulesFromNode(project, issuesByLevel, issues);
+			if (issuesByLevel != null && !issuesByLevel.isEmpty()) {
+				int count = initMostViolatedRulesFromNode(issuesByLevel, issues);
 				LOG.debug("\t " + count + " " + severities[i] + " violations");
 				limit = limit - count;
 			} else {
@@ -199,30 +197,33 @@ public class ProjectBuilder {
 			if (rules == null || rules.getRules() == null || rules.getRules().size() != 1) {
 				LOG.error("There is not result on select rule from service");
 			} else {
-				org.sonarqube.ws.model.Rule ruleNode = rules.getRules().get(0);
-				Rule rule = new Rule();
-				rule.setKey(ruleNode.getKey());
-				rule.setName(ruleNode.getName());
-				rule.setSeverity(new Severity(entry.getValue().getSeverity()));
-				rule.setViolationsNumber("" + entry.getValue().getIssues().size());
-				// setTopViolations
-				List<Violation> violations = new ArrayList<Violation>();
-				for (Issue issue : entry.getValue().getIssues()) {
-					String line = null;
-					if (issue.getLine() == null) {
-						line = EntityUtils.NA_METRICS;
-					} else {
-						line = "" + issue.getLine();
-					}
-					Violation violation = new Violation(line, issue.getComponent());
-					violations.add(violation);
-				}
-				rule.setTopViolations(violations);
-				project.getMostViolatedRules().add(rule);
-
+				project.getMostViolatedRules().add(defineRule(entry, rules));
 			}
 		}
 
+	}
+
+	private Rule defineRule(Entry<String, IssueBean> entry, org.sonarqube.ws.model.Rules rules) {
+		org.sonarqube.ws.model.Rule ruleNode = rules.getRules().get(0);
+		Rule rule = new Rule();
+		rule.setKey(ruleNode.getKey());
+		rule.setName(ruleNode.getName());
+		rule.setSeverity(new Severity(entry.getValue().getSeverity()));
+		rule.setViolationsNumber(Integer.toString(entry.getValue().getIssues().size()));
+		// setTopViolations
+		List<Violation> violations = new ArrayList<>();
+		for (Issue issue : entry.getValue().getIssues()) {
+			String line;
+			if (issue.getLine() == null) {
+				line = EntityUtils.NA_METRICS;
+			} else {
+				line = "" + issue.getLine();
+			}
+			Violation violation = new Violation(line, issue.getComponent());
+			violations.add(violation);
+		}
+		rule.setTopViolations(violations);
+		return rule;
 	}
 
 	private void initMostViolatedFiles(final Project project) throws IOException {
@@ -230,7 +231,7 @@ public class ProjectBuilder {
 		LOG.debug("Accessing Sonar: getting most violated files");
 
 		ResourceQuery resourceQuery = ResourceQuery.createForMetrics(project.getKey(), MetricKeys.VIOLATIONS);
-		resourceQuery.setScopes("FIL");
+		resourceQuery.setScopes(FILE_SCOPE);
 		resourceQuery.setDepth(-1);
 		resourceQuery.setLimit(tableLimit);
 		List<Resource> resources = sonar.findAll(resourceQuery);
@@ -244,7 +245,7 @@ public class ProjectBuilder {
 		LOG.debug("Accessing Sonar: getting most complex elements");
 
 		ResourceQuery resourceQuery = ResourceQuery.createForMetrics(project.getKey(), MetricKeys.COMPLEXITY);
-		resourceQuery.setScopes("FIL");
+		resourceQuery.setScopes(FILE_SCOPE);
 		resourceQuery.setDepth(-1);
 		resourceQuery.setLimit(tableLimit);
 		List<Resource> resources = sonar.findAll(resourceQuery);
@@ -256,15 +257,15 @@ public class ProjectBuilder {
 		LOG.debug("Accessing Sonar: getting most duplicated files");
 
 		ResourceQuery resourceQuery = ResourceQuery.createForMetrics(project.getKey(), MetricKeys.DUPLICATED_LINES);
-		resourceQuery.setScopes("FIL");
+		resourceQuery.setScopes(FILE_SCOPE);
 		resourceQuery.setDepth(-1);
 		resourceQuery.setLimit(tableLimit);
 		List<Resource> resources = sonar.findAll(resourceQuery);
 		project.setMostDuplicatedFiles(FileInfoBuilder.initFromDocument(resources, FileInfo.DUPLICATIONS_CONTENT));
 	}
 
-	private int initMostViolatedRulesFromNode(final Project project, final List<Issue> issuesByLevel,
-			Map<String, IssueBean> issues) throws ReportException, IOException {
+	private int initMostViolatedRulesFromNode(final List<Issue> issuesByLevel, Map<String, IssueBean> issues)
+			throws ReportException, IOException {
 		int added = 0;
 		for (Issue issue : issuesByLevel) {
 			String ruleKey = issue.getRule();
@@ -274,7 +275,7 @@ public class ProjectBuilder {
 				bean.getIssues().add(issue);
 			} else {
 				// adds Issue to a List for a new key
-				List<Issue> issuesForKey = new ArrayList<Issue>();
+				List<Issue> issuesForKey = new ArrayList<>();
 				IssueBean bean = new IssueBean();
 				bean.setSeverity(issue.getSeverity());
 				issuesForKey.add(issue);
@@ -321,6 +322,7 @@ public class ProjectBuilder {
 			this.base = base;
 		}
 
+		@Override
 		public int compare(String a, String b) {
 			IssueBean beanA = base.get(a);
 			IssueBean beanB = base.get(b);

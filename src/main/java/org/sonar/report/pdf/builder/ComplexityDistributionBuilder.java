@@ -28,7 +28,13 @@ import org.sonar.report.pdf.entity.ComplexityDistribution;
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Image;
 
-public class ComplexityDistributionBuilder {
+public class ComplexityDistributionBuilder extends AbstractBuilder {
+
+	private static final String CHART_END_PATH = "&chorgv=y&chcaaml=0.05&chseamu=0.2&chins=5&chcaamu=0.05&chcav=y&chc=777777,777777,777777,777777,777777,777777,777777";
+
+	private static final String CHART_Y_PATH = "&chov=y&chrav=y&chv=";
+
+	private static final String CHART_START_PATH = "/chart?cht=cvb&chdi=300x200&chca=";
 
 	private static final Logger LOG = LoggerFactory.getLogger(ComplexityDistributionBuilder.class);
 
@@ -52,10 +58,8 @@ public class ComplexityDistributionBuilder {
 		Image image = null;
 		try {
 			if (complexityDistribution.getyValues().length != 0) {
-				image = Image.getInstance(sonarBaseUrl + "/chart?cht=cvb&chdi=300x200&chca="
-						+ complexityDistribution.formatXValues() + "&chov=y&chrav=y&chv="
-						+ complexityDistribution.formatYValues()
-						+ "&chorgv=y&chcaaml=0.05&chseamu=0.2&chins=5&chcaamu=0.05&chcav=y&chc=777777,777777,777777,777777,777777,777777,777777");
+				image = Image.getInstance(sonarBaseUrl + CHART_START_PATH + complexityDistribution.formatXValues()
+						+ CHART_Y_PATH + complexityDistribution.formatYValues() + CHART_END_PATH);
 				image.setAlignment(Image.ALIGN_MIDDLE);
 			}
 		} catch (BadElementException | IOException e) {

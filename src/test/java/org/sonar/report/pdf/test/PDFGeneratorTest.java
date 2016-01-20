@@ -28,6 +28,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.sonar.report.pdf.PDFReporter;
+import org.sonar.report.pdf.PDFResources;
 import org.sonar.report.pdf.TeamWorkbookPDFReporter;
 import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonar.report.pdf.util.Credentials;
@@ -59,7 +60,7 @@ public class PDFGeneratorTest extends SonarPDFTest {
 		config.setProperty("front.page.logo", logo);
 		config.setProperty("sonar.base.url", sonarUrl);
 
-		ResourceBundle rb = ResourceBundle.getBundle(PDFReporter.RESOURCE_NAME, Locale.getDefault(),
+		ResourceBundle rb = ResourceBundle.getBundle(PDFResources.RESOURCE_NAME, Locale.getDefault(),
 				this.getClass().getClassLoader());
 		Properties configText = new Properties();
 		Enumeration<String> keys = rb.getKeys();

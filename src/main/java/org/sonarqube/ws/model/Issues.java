@@ -22,12 +22,12 @@ package org.sonarqube.ws.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Issues extends Model {
-	private final List<Issue> issues = new ArrayList<Issue>();
+public class Issues implements Model {
+	private final List<Issue> issues = new ArrayList<>();
 
-	private final List<Component> components = new ArrayList<Component>();
-	private final List<Rule> rules = new ArrayList<Rule>();
-	private final List<User> users = new ArrayList<User>();
+	private final List<Component> components = new ArrayList<>();
+	private final List<Rule> rules = new ArrayList<>();
+	private final List<User> users = new ArrayList<>();
 	private Paging paging;
 
 	public Paging getPaging() {

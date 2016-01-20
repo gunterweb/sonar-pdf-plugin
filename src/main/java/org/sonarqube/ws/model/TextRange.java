@@ -19,7 +19,7 @@
  */
 package org.sonarqube.ws.model;
 
-public class TextRange extends Model {
+public class TextRange implements Model {
 	private Integer startLine;
 	private Integer endLine;
 	private Integer startOffset;

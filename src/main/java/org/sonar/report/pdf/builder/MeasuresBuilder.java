@@ -22,6 +22,7 @@ package org.sonar.report.pdf.builder;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -38,7 +39,7 @@ import org.sonarqube.ws.model.Resource;
 import org.sonarqube.ws.query.MetricQuery;
 import org.sonarqube.ws.query.ResourceQuery;
 
-public class MeasuresBuilder {
+public class MeasuresBuilder extends AbstractBuilder {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MeasuresBuilder.class);
 
@@ -46,9 +47,9 @@ public class MeasuresBuilder {
 
 	private WSClient sonar;
 
-	private static List<String> measuresKeys = null;
+	private List<String> measuresKeys = null;
 
-	private static Integer DEFAULT_SPLIT_LIMIT = 20;
+	private static final Integer DEFAULT_SPLIT_LIMIT = 20;
 
 	public MeasuresBuilder(final WSClient sonar) {
 		this.sonar = sonar;
@@ -58,7 +59,6 @@ public class MeasuresBuilder {
 		if (builder == null) {
 			return new MeasuresBuilder(sonar);
 		}
-
 		return builder;
 	}
 
@@ -66,7 +66,7 @@ public class MeasuresBuilder {
 
 		MetricQuery query = MetricQuery.all();
 		Metrics metrics = sonar.find(query);
-		List<String> allMetricKeys = new ArrayList<String>();
+		List<String> allMetricKeys = new ArrayList<>();
 		Iterator<Metric> it = metrics.getMetrics().iterator();
 		while (it.hasNext()) {
 			allMetricKeys.add(it.next().getKey());
@@ -101,7 +101,7 @@ public class MeasuresBuilder {
 			throws HttpException, IOException {
 		Iterator<String> it = measuresKeys.iterator();
 		LOG.debug("Getting " + measuresKeys.size() + " metric measures from Sonar by splitting requests");
-		List<String> twentyMeasures = new ArrayList<String>(20);
+		List<String> twentyMeasures = new ArrayList<>(20);
 		int i = 0;
 		while (it.hasNext()) {
 			twentyMeasures.add(it.next());
@@ -125,8 +125,8 @@ public class MeasuresBuilder {
 	private void addMeasures(final Measures measures, final List<String> measuresAsString, final String projectKey)
 			throws HttpException, IOException {
 
-		String[] measuresAsArray = measuresAsString.toArray(new String[measuresAsString.size()]);	
-		System.out.println(measuresAsArray);
+		String[] measuresAsArray = measuresAsString.toArray(new String[measuresAsString.size()]);
+		LOG.debug(Arrays.toString(measuresAsArray));
 		ResourceQuery query = ResourceQuery.createForMetrics(projectKey, measuresAsArray);
 		query.setDepth(0);
 		query.setIncludeTrends(true);

@@ -26,30 +26,7 @@ import java.util.List;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 
-public class Resource extends Model {
-
-	/* SCOPES */
-	public static final String SCOPE_SET = "PRJ";
-	public static final String SCOPE_SPACE = "DIR";
-	public static final String SCOPE_ENTITY = "FIL";
-
-	/* QUALIFIERS */
-	public static final String QUALIFIER_VIEW = "VW";
-	public static final String QUALIFIER_SUBVIEW = "SVW";
-	public static final String QUALIFIER_LIB = "LIB";
-	public static final String QUALIFIER_PROJECT = "TRK";
-	public static final String QUALIFIER_MODULE = "BRC";
-	/**
-	 * @deprecated since 4.2
-	 */
-	@Deprecated
-	public static final String QUALIFIER_PACKAGE = "PAC";
-	public static final String QUALIFIER_DIRECTORY = "DIR";
-	public static final String QUALIFIER_FILE = "FIL";
-	public static final String QUALIFIER_UNIT_TEST_CLASS = "UTS";
-
-	/* LANGUAGES */
-	public static final String LANGUAGE_JAVA = "java";
+public class Resource implements Model {
 
 	private Integer id;
 	private String key;
@@ -66,9 +43,21 @@ public class Resource extends Model {
 	private Date creationDate;
 
 	// periods used for variations and tracking of violations
-	private String period1Mode, period2Mode, period3Mode, period4Mode, period5Mode;
-	private String period1Param, period2Param, period3Param, period4Param, period5Param;
-	private Date period1Date, period2Date, period3Date, period4Date, period5Date;
+	private String period1Mode;
+	private String period2Mode;
+	private String period3Mode;
+	private String period4Mode;
+	private String period5Mode;
+	private String period1Param;
+	private String period2Param;
+	private String period3Param;
+	private String period4Param;
+	private String period5Param;
+	private Date period1Date;
+	private Date period2Date;
+	private Date period3Date;
+	private Date period4Date;
+	private Date period5Date;
 
 	@CheckForNull
 	public Integer getId() {

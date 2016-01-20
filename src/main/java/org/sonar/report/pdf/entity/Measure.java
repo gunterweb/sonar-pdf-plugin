@@ -38,7 +38,7 @@ public class Measure {
 	}
 
 	public Measure() {
-
+		super();
 	}
 
 	public String getKey() {

@@ -19,5 +19,8 @@
  */
 package org.sonarqube.ws.model;
 
-public abstract class Model {
+import org.sonar.report.pdf.PDFResources;
+
+public interface Model extends PDFResources {
+	
 }

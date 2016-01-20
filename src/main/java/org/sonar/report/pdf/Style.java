@@ -28,7 +28,15 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 
+/**
+ * 
+ *
+ */
 public class Style {
+
+	private Style() {
+		super();
+	}
 
 	/**
 	 * Font used in main chapters title

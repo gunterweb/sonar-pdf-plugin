@@ -17,43 +17,10 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonarqube.ws.query;
+package org.sonar.report.pdf.builder;
 
-import org.sonarqube.ws.client.services.Query;
-import org.sonarqube.ws.model.Rules;
+import org.sonar.report.pdf.PDFResources;
 
-public class RuleQuery extends Query<Rules> {
+public abstract class AbstractBuilder implements PDFResources {
 
-	public static final String BASE_URL = "/api/rules/search?";
-
-	private String ruleKey;
-
-	public RuleQuery(String ruleKey) {
-		setRuleKey(ruleKey);
-	}
-
-	@Override
-	public String getUrl() {
-		StringBuilder url = new StringBuilder(BASE_URL);
-		url.append('?');
-		appendUrlParameter(url, "rule_key", ruleKey);
-		return url.toString();
-	}
-
-	@Override
-	public final Class<Rules> getModelClass() {
-		return Rules.class;
-	}
-
-	public static RuleQuery create(String ruleKey) {
-		return new RuleQuery(ruleKey);
-	}
-
-	public String getRuleKey() {
-		return ruleKey;
-	}
-
-	public void setRuleKey(String ruleKey) {
-		this.ruleKey = ruleKey;
-	}
 }
