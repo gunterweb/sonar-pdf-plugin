@@ -37,6 +37,7 @@ import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonar.report.pdf.util.Credentials;
 import org.sonar.report.pdf.util.MetricKeys;
 
+import com.lowagie.text.Chapter;
 import com.lowagie.text.ChapterAutoNumber;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -138,36 +139,36 @@ public class ExecutivePDFReporter extends PDFReporter {
 	protected void printPdfBody(final Document document) throws DocumentException, IOException, ReportException {
 		Project project = super.getProject();
 		// Chapter 1: Report Overview (Parent project)
-		ChapterAutoNumber chapter1 = printDetailsForProject(project);
+		ChapterAutoNumber chapter1 = new ChapterAutoNumber(new Paragraph(project.getName(), Style.CHAPTER_FONT));
 		chapter1.add(new Paragraph(getTextProperty(MAIN_TEXT_MISC_OVERVIEW), Style.NORMAL_FONT));
+		printDetailsForProject(project, chapter1);
+
 		document.add(chapter1);
 		for (Project subProject : project.getSubprojects()) {
-			document.add(printDetailsForProject(subProject));
+			ChapterAutoNumber chapterN = new ChapterAutoNumber(new Paragraph(subProject.getName(), Style.CHAPTER_FONT));
+			printDetailsForProject(subProject, chapterN);
+			document.add(chapterN);
 		}
 	}
 
-	private ChapterAutoNumber printDetailsForProject(Project subproject) throws DocumentException {
-		ChapterAutoNumber chapterN = new ChapterAutoNumber(new Paragraph(subproject.getName(), Style.CHAPTER_FONT));
-		Section sectionN1 = chapterN
+	private void printDetailsForProject(Project subproject, Chapter chapter) throws DocumentException {
+		Section sectionN1 = chapter
 				.addSection(new Paragraph(getTextProperty(GENERAL_REPORT_OVERVIEW), Style.TITLE_FONT));
 		printDashboard(subproject, sectionN1);
 
-		Section sectionN2 = chapterN
+		Section sectionN2 = chapter
 				.addSection(new Paragraph(getTextProperty(GENERAL_VIOLATIONS_ANALYSIS), Style.TITLE_FONT));
 		printMostViolatedRules(subproject, sectionN2);
 		printMostViolatedFiles(subproject, sectionN2);
 		printMostComplexFiles(subproject, sectionN2);
 		printMostDuplicatedFiles(subproject, sectionN2);
 
-		printSpecificData(subproject, chapterN);
+		printSpecificData(subproject, chapter);
 
-		Section sectionN4 = chapterN
-				.addSection(new Paragraph(getTextProperty(GENERAL_VIOLATIONS_DASHBOARD), Style.TITLE_FONT));
-		printCCNDistribution(subproject, sectionN4);
-		return chapterN;
+		printCCNDistribution(subproject, chapter);
 	}
 
-	protected void printSpecificData(Project project, ChapterAutoNumber chapter1) {
+	protected void printSpecificData(Project project, Chapter chapter) {
 		// nothing to do here; used for inherited class to insert specific data
 
 	}
@@ -415,9 +416,11 @@ public class ExecutivePDFReporter extends PDFReporter {
 		tocDocument.getTocDocument().add(Chunk.NEWLINE);
 	}
 
-	private void printCCNDistribution(Project project, Section section) {
+	private void printCCNDistribution(Project project, Chapter chapter) {
 		Image ccnDistGraph = getCCNDistribution(project);
 		if (ccnDistGraph != null) {
+			Section section = chapter
+					.addSection(new Paragraph(getTextProperty(GENERAL_VIOLATIONS_DASHBOARD), Style.TITLE_FONT));
 			section.add(ccnDistGraph);
 			Paragraph imageFoot = new Paragraph(getTextProperty(METRICS_CCN_CLASSES_COUNT_DISTRIBUTION),
 					Style.FOOT_FONT);

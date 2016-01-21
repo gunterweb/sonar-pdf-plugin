@@ -21,7 +21,6 @@ package org.sonar.report.pdf;
 
 import java.awt.Color;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -31,7 +30,7 @@ import org.sonar.report.pdf.entity.Rule;
 import org.sonar.report.pdf.entity.Violation;
 import org.sonar.report.pdf.util.Credentials;
 
-import com.lowagie.text.ChapterAutoNumber;
+import com.lowagie.text.Chapter;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Section;
@@ -49,29 +48,27 @@ public class TeamWorkbookPDFReporter extends ExecutivePDFReporter {
 	}
 
 	@Override
-	protected void printSpecificData(Project project, ChapterAutoNumber chapter) {
-		Section section = chapter
-				.addSection(new Paragraph(getTextProperty(GENERAL_VIOLATIONS_DETAILS), Style.TITLE_FONT));
-		printMostViolatedRulesDetails(project, section);
+	protected void printSpecificData(Project project, Chapter chapter) {
+
+		printMostViolatedRulesDetails(project, chapter);
 	}
 
-	private void printMostViolatedRulesDetails(final Project project, final Section section13) {
-		Iterator<Rule> it = project.getMostViolatedRules().iterator();
-
-		while (it.hasNext()) {
-			Rule rule = it.next();
-			List<String> files = new LinkedList<>();
-			List<String> lines = new LinkedList<>();
-			if (rule.getTopViolations() != null) {
-				Iterator<Violation> itViolations = rule.getTopViolations().iterator();
-				while (itViolations.hasNext()) {
-					Violation violation = itViolations.next();
-					String[] components = violation.getResource().split("/");
-					files.add(components[components.length - 1]);
-					lines.add(violation.getLine());
+	private void printMostViolatedRulesDetails(final Project project, final Chapter chapter) {
+		if (project.getMostViolatedRules() != null && !project.getMostViolatedRules().isEmpty()) {
+			Section section = chapter
+					.addSection(new Paragraph(getTextProperty(GENERAL_VIOLATIONS_DETAILS), Style.TITLE_FONT));
+			for (Rule rule : project.getMostViolatedRules()) {
+				List<String> files = new LinkedList<>();
+				List<String> lines = new LinkedList<>();
+				if (rule.getTopViolations() != null) {
+					for (Violation violation : rule.getTopViolations()) {
+						String[] components = violation.getResource().split("/");
+						files.add(components[components.length - 1]);
+						lines.add(violation.getLine());
+					}
 				}
+				section.add(createViolationsDetailedTable(rule.getName(), files, lines));
 			}
-			section13.add(createViolationsDetailedTable(rule.getName(), files, lines));
 		}
 	}
 

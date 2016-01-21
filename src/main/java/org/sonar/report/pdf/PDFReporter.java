@@ -30,7 +30,6 @@ import org.sonar.api.utils.HttpDownloader.HttpException;
 import org.sonar.report.pdf.builder.ComplexityDistributionBuilder;
 import org.sonar.report.pdf.builder.ProjectBuilder;
 import org.sonar.report.pdf.entity.ComplexityDistribution;
-import org.sonar.report.pdf.entity.EntityUtils;
 import org.sonar.report.pdf.entity.Project;
 import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonar.report.pdf.util.Credentials;
@@ -131,7 +130,7 @@ public abstract class PDFReporter implements PDFResources {
 		if (project.getMeasure(MetricKeys.FILE_COMPLEXITY_DISTRIBUTION).getDataValue() != null) {
 			data = project.getMeasure(MetricKeys.FILE_COMPLEXITY_DISTRIBUTION).getDataValue();
 		} else {
-			data = EntityUtils.NA_METRICS;
+			return null;
 		}
 		ComplexityDistributionBuilder complexityDistributionBuilder = ComplexityDistributionBuilder
 				.getInstance(credentials.getUrl());
