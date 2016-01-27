@@ -42,7 +42,7 @@ import org.sonarqube.ws.client.services.AbstractQuery;
 import org.sonarqube.ws.client.services.Query;
 
 /**
- * Implemenation of Connector with Apache HttpClient
+ * Implementation of Connector with Apache HttpClient
  *
  */
 public class HttpClient3Connector implements Connector {
@@ -59,12 +59,7 @@ public class HttpClient3Connector implements Connector {
 
     public HttpClient3Connector(final SonarHost server) {
         this.server = server;
-        createClient();
-    }
-
-    public HttpClient3Connector(SonarHost server, HttpClient httpClient) {
-        this.httpClient = httpClient;
-        this.server = server;
+        this.createClient();
     }
 
     private void createClient() {
