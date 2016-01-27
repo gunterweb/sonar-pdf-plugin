@@ -37,58 +37,86 @@ import com.lowagie.text.pdf.PdfWriter;
  */
 public class Events extends PdfPageEventHelper {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Events.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Events.class);
 
-	private Toc toc;
-	private Header header;
+    private Toc toc;
+    private Header header;
 
-	public Events(final Toc toc, final Header header) {
-		this.toc = toc;
-		this.header = header;
-		toc.setHeader(header);
-	}
+    public Events(final Toc toc, final Header header) {
+        this.toc = toc;
+        this.header = header;
+        toc.setHeader(header);
+    }
 
-	@Override
-	public void onChapter(final PdfWriter writer, final Document document, final float position,
-			final Paragraph paragraph) {
-		toc.onChapter(writer, document, position, paragraph);
-	}
+    /**
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onChapter(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document, float, com.lowagie.text.Paragraph)
+     */
+    @Override
+    public void onChapter(final PdfWriter writer, final Document document, final float position,
+            final Paragraph paragraph) {
+        toc.onChapter(writer, document, position, paragraph);
+    }
 
-	@Override
-	public void onChapterEnd(final PdfWriter writer, final Document document, final float position) {
-		toc.onChapterEnd(writer, document, position);
-	}
+    /**
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onChapterEnd(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document, float)
+     */
+    @Override
+    public void onChapterEnd(final PdfWriter writer, final Document document, final float position) {
+        toc.onChapterEnd(writer, document, position);
+    }
 
-	@Override
-	public void onSection(final PdfWriter writer, final Document document, final float position, final int depth,
-			final Paragraph paragraph) {
-		toc.onSection(writer, document, position, depth, paragraph);
-	}
+    /**
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onSection(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document, float, int, com.lowagie.text.Paragraph)
+     */
+    @Override
+    public void onSection(final PdfWriter writer, final Document document, final float position, final int depth,
+            final Paragraph paragraph) {
+        toc.onSection(writer, document, position, depth, paragraph);
+    }
 
-	@Override
-	public void onEndPage(final PdfWriter writer, final Document document) {
-		header.onEndPage(writer, document);
-		printPageNumber(writer, document);
-	}
+    /**
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onEndPage(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document)
+     */
+    @Override
+    public void onEndPage(final PdfWriter writer, final Document document) {
+        header.onEndPage(writer, document);
+        printPageNumber(writer, document);
+    }
 
-	@Override
-	public void onCloseDocument(final PdfWriter writer, final Document document) {
-		toc.onCloseDocument(writer, document);
-	}
+    /**
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onCloseDocument(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document)
+     */
+    @Override
+    public void onCloseDocument(final PdfWriter writer, final Document document) {
+        toc.onCloseDocument(writer, document);
+    }
 
-	private void printPageNumber(final PdfWriter writer, final Document document) {
-		PdfContentByte cb = writer.getDirectContent();
-		cb.saveState();
-		float textBase = document.bottom() - 20;
-		try {
-			cb.setFontAndSize(BaseFont.createFont("Helvetica", BaseFont.WINANSI, false), 12);
-		} catch (DocumentException | IOException e) {
-			LOG.error("Can not print page number", e);
-		}
-		cb.beginText();
-		cb.setTextMatrix(document.right() - 10, textBase);
-		cb.showText(String.valueOf(writer.getPageNumber()));
-		cb.endText();
-		cb.saveState();
-	}
+    /**
+     * Print page number
+     * 
+     * @param writer
+     *            writer
+     * @param document
+     *            document
+     */
+    private void printPageNumber(final PdfWriter writer, final Document document) {
+        PdfContentByte cb = writer.getDirectContent();
+        cb.saveState();
+        float textBase = document.bottom() - 20;
+        try {
+            cb.setFontAndSize(BaseFont.createFont("Helvetica", BaseFont.WINANSI, false), 12);
+        } catch (DocumentException | IOException e) {
+            LOG.error("Can not print page number", e);
+        }
+        cb.beginText();
+        cb.setTextMatrix(document.right() - 10, textBase);
+        cb.showText(String.valueOf(writer.getPageNumber()));
+        cb.endText();
+        cb.saveState();
+    }
 }

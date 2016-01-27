@@ -31,88 +31,88 @@ import java.util.Set;
  */
 public abstract class WSUtils {
 
-	private static volatile WSUtils instance = null;
+    private static volatile WSUtils instance = null;
 
-	public static void setInstance(WSUtils utils) {
-		instance = utils;
-	}
+    public static void setInstance(WSUtils utils) {
+        instance = utils;
+    }
 
-	public static WSUtils getINSTANCE() {
-		return instance;
-	}
+    public static WSUtils getINSTANCE() {
+        return instance;
+    }
 
-	public abstract String format(Date date, String format);
+    public abstract String format(Date date, String format);
 
-	public abstract String encodeUrl(String url);
+    public abstract String encodeUrl(String url);
 
-	/**
-	 * @return value of specified field from specified JSON object, or
-	 *         <code>null</code> if field does not exist
-	 */
-	@CheckForNull
-	public abstract Object getField(Object json, String field);
+    /**
+     * @return value of specified field from specified JSON object, or
+     *         <code>null</code> if field does not exist
+     */
+    @CheckForNull
+    public abstract Object getField(Object json, String field);
 
-	/**
-	 * @return value of a string field from specified JSON object, or string
-	 *         representation of a numeric field, or <code>null</code> if field
-	 *         does not exist
-	 */
-	@CheckForNull
-	public abstract String getString(Object json, String field);
+    /**
+     * @return value of a string field from specified JSON object, or string
+     *         representation of a numeric field, or <code>null</code> if field
+     *         does not exist
+     */
+    @CheckForNull
+    public abstract String getString(Object json, String field);
 
-	/**
-	 * @return Boolean value of specified field from specified JSON object, or
-	 *         <code>null</code> if field does not exist
-	 */
-	@CheckForNull
-	public abstract Boolean getBoolean(Object json, String field);
+    /**
+     * @return Boolean value of specified field from specified JSON object, or
+     *         <code>null</code> if field does not exist
+     */
+    @CheckForNull
+    public abstract Boolean getBoolean(Object json, String field);
 
-	/**
-	 * @return Integer value of specified field from specified JSON object, or
-	 *         <code>null</code> if field does not exist
-	 */
-	@CheckForNull
-	public abstract Integer getInteger(Object json, String field);
+    /**
+     * @return Integer value of specified field from specified JSON object, or
+     *         <code>null</code> if field does not exist
+     */
+    @CheckForNull
+    public abstract Integer getInteger(Object json, String field);
 
-	/**
-	 * @return Double value of specified field from specified JSON object, or
-	 *         <code>null</code> if field does not exist
-	 */
-	@CheckForNull
-	public abstract Double getDouble(Object json, String field);
+    /**
+     * @return Double value of specified field from specified JSON object, or
+     *         <code>null</code> if field does not exist
+     */
+    @CheckForNull
+    public abstract Double getDouble(Object json, String field);
 
-	/**
-	 * @return Long value of specified field from specified JSON object, or
-	 *         <code>null</code> if field does not exist
-	 */
-	@CheckForNull
-	public abstract Long getLong(Object json, String field);
+    /**
+     * @return Long value of specified field from specified JSON object, or
+     *         <code>null</code> if field does not exist
+     */
+    @CheckForNull
+    public abstract Long getLong(Object json, String field);
 
-	/**
-	 * @return Date value of specified field from specified JSON object, or
-	 *         <code>null</code> if field does not exist
-	 */
-	@CheckForNull
-	public abstract Date getDateTime(Object json, String field);
+    /**
+     * @return Date value of specified field from specified JSON object, or
+     *         <code>null</code> if field does not exist
+     */
+    @CheckForNull
+    public abstract Date getDateTime(Object json, String field);
 
-	/**
-	 * @return size of specified JSON array
-	 */
-	public abstract int getArraySize(Object array);
+    /**
+     * @return size of specified JSON array
+     */
+    public abstract int getArraySize(Object array);
 
-	/**
-	 * @return element from specified JSON array
-	 */
-	public abstract Object getArrayElement(Object array, int i);
+    /**
+     * @return element from specified JSON array
+     */
+    public abstract Object getArrayElement(Object array, int i);
 
-	/**
-	 * @return JSON object
-	 */
-	public abstract Object parse(String jsonStr);
+    /**
+     * @return JSON object
+     */
+    public abstract Object parse(String jsonStr);
 
-	/**
-	 * @return field names in specified JSON object
-	 */
-	public abstract Set<String> getFields(Object json);
+    /**
+     * @return field names in specified JSON object
+     */
+    public abstract Set<String> getFields(Object json);
 
 }

@@ -21,52 +21,48 @@ package org.sonar.report.pdf.builder;
 
 import org.sonar.report.pdf.entity.Measure;
 
+/**
+ * Builder for a measure
+ *
+ */
 public class MeasureBuilder extends AbstractBuilder {
 
-	private MeasureBuilder() {
-		super();
-	}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4923945826578916614L;
 
-	/**
-	 * Init measure from XML node. The root node must be "msr".
-	 * 
-	 * @param measureNode
-	 * @return
-	 */
-	public static Measure initFromNode(final org.sonarqube.ws.model.Measure measureNode) {
-		Measure measure = new Measure();
-		measure.setKey(measureNode.getKey());
+    private MeasureBuilder() {
+        super();
+    }
 
-		String formatValueNode = measureNode.getFrmt_val();
-		if (formatValueNode != null) {
-			measure.setFormatValue(formatValueNode);
-			measure.setValue(String.valueOf(measureNode.getVal()));
-		}
+    /**
+     * Init measure from XML node. The root node must be "msr".
+     * 
+     * @param measureNode
+     * @return
+     */
+    public static Measure initFromNode(final org.sonarqube.ws.model.Measure measureNode) {
+        Measure measure = new Measure();
+        measure.setKey(measureNode.getKey());
 
-		Integer trendNode = measureNode.getTrend();
-		if (trendNode != null) {
-			measure.setQualitativeTendency(trendNode);
-		} else {
-			measure.setQualitativeTendency(0);
-		}
+        String formatValueNode = measureNode.getFormattedValue();
+        if (formatValueNode != null) {
+            measure.setFormatValue(formatValueNode);
+            measure.setValue(String.valueOf(measureNode.getValue()));
+        }
 
-		Integer varNode = measureNode.getVar();
-		if (varNode != null) {
-			measure.setQuantitativeTendency(varNode);
-		} else {
-			measure.setQuantitativeTendency(0);
-		}
+        Double valueNode = measureNode.getValue();
 
-		Double valueNode = measureNode.getVal();
+        if (valueNode != null) {
+            measure.setTextValue(String.valueOf(valueNode));
+        } else {
+            measure.setTextValue("");
+        }
 
-		if (valueNode != null) {
-			measure.setTextValue(String.valueOf(valueNode));
-		} else {
-			measure.setTextValue("");
-		}
+        measure.setDataValue(measureNode.getData());
 
-		measure.setDataValue(measureNode.getData());
+        return measure;
+    }
 
-		return measure;
-	}
 }

@@ -19,58 +19,26 @@
  */
 package org.sonarqube.ws.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Rule model
+ * TimeMachines model
  *
  */
-public class Rule implements Model {
+public class TimeMachines implements Model {
     /**
      * 
      */
-    private static final long serialVersionUID = 7874511314888199627L;
-    String key;
-    String name;
-    String status;
-    String lang;
-    String langName;
+    private static final long serialVersionUID = 6491880262994522426L;
+    private List<MeasureHisto> cells = new ArrayList<>();
 
-    public String getKey() {
-        return key;
+    public List<MeasureHisto> getCells() {
+        return cells;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setCells(List<MeasureHisto> cells) {
+        this.cells = cells;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
-    public String getLangName() {
-        return langName;
-    }
-
-    public void setLangName(String langName) {
-        this.langName = langName;
-    }
 }

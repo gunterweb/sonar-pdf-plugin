@@ -19,8 +19,12 @@
  */
 package org.sonarqube.ws.model;
 
-import org.sonar.report.pdf.PDFResources;
+import java.io.Serializable;
 
-public interface Model extends PDFResources {
-	
+/**
+ * Model interface
+ *
+ */
+public interface Model extends Serializable {
+
 }

@@ -34,55 +34,64 @@ import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonar.report.pdf.util.Credentials;
 import org.testng.annotations.Test;
 
-import com.lowagie.text.DocumentException;
-
 public class PDFGeneratorTest extends SonarPDFTest {
 
-	/**
-	 * Build a PDF report for the Sonar project on "sonar.base.url" instance of
-	 * Sonar. The property "sonar.base.url" is set in report.properties, this
-	 * file will be provided by the artifact consumer.
-	 * 
-	 * The key of the project is not place in properties, this is provided in
-	 * execution time.
-	 * 
-	 * @throws ReportException
-	 */
-	@Test(enabled = true, groups = { "report" }, dependsOnGroups = { "metrics" })
-	public void getReportTest() throws DocumentException, IOException, ReportException {
-		String logo = getPropertyForTest("front.page.logo");
-		String sonarUrl = getPropertyForTest("sonar.base.url");
-		String projectKey = getPropertyForTest("sonar.projectKey");
-		String login = getPropertyForTest("sonar.base.login");
-		String pwd = getPropertyForTest("sonar.base.password");
+    /**
+     * Build a PDF report for the Sonar project on "sonar.base.url" instance of
+     * Sonar. The property "sonar.base.url" is set in report.properties, this
+     * file will be provided by the artifact consumer.
+     * 
+     * The key of the project is not place in properties, this is provided in
+     * execution time.
+     * 
+     * @throws ReportException
+     */
+    @Test(enabled = true, groups = { "report" }, dependsOnGroups = { "metrics" })
+    public void getReportTest() throws ReportException {
+        String logo = getPropertyForTest("front.page.logo");
+        String sonarUrl = getPropertyForTest("sonar.base.url");
+        String projectKey = getPropertyForTest("sonar.projectKey");
+        String login = getPropertyForTest("sonar.base.login");
+        String pwd = getPropertyForTest("sonar.base.password");
 
-		Properties config = new Properties();
-		config.setProperty("front.page.logo", logo);
-		config.setProperty("sonar.base.url", sonarUrl);
+        Properties config = new Properties();
+        config.setProperty("front.page.logo", logo);
+        config.setProperty("sonar.base.url", sonarUrl);
 
-		ResourceBundle rb = ResourceBundle.getBundle(PDFResources.RESOURCE_NAME, Locale.getDefault(),
-				this.getClass().getClassLoader());
-		Properties configText = new Properties();
-		Enumeration<String> keys = rb.getKeys();
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
-			configText.setProperty(key, (String) rb.getObject(key));
-		}
+        ResourceBundle rb = ResourceBundle.getBundle(PDFResources.RESOURCE_NAME, Locale.getDefault(),
+                this.getClass().getClassLoader());
+        Properties configText = new Properties();
+        Enumeration<String> keys = rb.getKeys();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            configText.setProperty(key, (String) rb.getObject(key));
+        }
 
-		Credentials credentials = new Credentials(sonarUrl, login, pwd);
+        Credentials credentials = new Credentials(sonarUrl, login, pwd);
 
-		PDFReporter reporter = new TeamWorkbookPDFReporter(credentials, this.getClass().getResource("/" + logo),
-				projectKey, config, configText);
+        PDFReporter reporter = new TeamWorkbookPDFReporter(credentials, this.getClass().getResource("/" + logo),
+                projectKey, config, configText);
 
-		ByteArrayOutputStream baos = reporter.getReport();
-		FileOutputStream fos = null;
+        ByteArrayOutputStream baos = reporter.getReport();
+        FileOutputStream fos = null;
 
-		fos = new FileOutputStream("target/testReport.pdf");
+        try {
+            fos = new FileOutputStream("target/testReport.pdf");
+            baos.writeTo(fos);
+            fos.flush();
 
-		baos.writeTo(fos);
-		fos.flush();
-		fos.close();
+        } catch (IOException e) {
+            assert(false);
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    assert(false);
+                }
+            }
+        }
 
-	}
+    }
 
 }

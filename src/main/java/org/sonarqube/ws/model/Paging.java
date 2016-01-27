@@ -19,35 +19,44 @@
  */
 package org.sonarqube.ws.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.sonarqube.ws.client.unmarshallers.JsonUtils;
 
-public class Paging {
+/**
+ * Paging model
+ *
+ */
+public class Paging implements Model {
 
-	private final Map json;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2540275275018566305L;
+    private final Map<Serializable, Serializable> json;
 
-	/**
-	 * For internal use
-	 */
-	public Paging(Map json) {
-		this.json = json;
-	}
+    /**
+     * For internal use
+     */
+    public Paging(Map<Serializable, Serializable> json) {
+        this.json = json;
+    }
 
-	public Integer pageSize() {
-		return JsonUtils.getInteger(json, "ps");
-	}
+    public Integer pageSize() {
+        return JsonUtils.getInteger(json, "ps");
+    }
 
-	public Integer pageIndex() {
-		return JsonUtils.getInteger(json, "p");
-	}
+    public Integer pageIndex() {
+        return JsonUtils.getInteger(json, "p");
+    }
 
-	public Integer total() {
-		return JsonUtils.getInteger(json, "total");
-	}
+    public Integer total() {
+        return JsonUtils.getInteger(json, "total");
+    }
 
-	public Integer pages() {
-		return JsonUtils.getInteger(json, "pages");
-	}
+    public Integer pages() {
+        return JsonUtils.getInteger(json, "pages");
+    }
 
 }

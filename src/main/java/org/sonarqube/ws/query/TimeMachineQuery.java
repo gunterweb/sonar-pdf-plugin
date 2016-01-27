@@ -20,38 +20,62 @@
 package org.sonarqube.ws.query;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.sonarqube.ws.client.services.Query;
-import org.sonarqube.ws.model.Metrics;
+import org.sonarqube.ws.model.TimeMachines;
 
 /**
- * Query for metrics
+ * Query for time machine
  *
  */
-public final class MetricQuery extends Query<Metrics> {
+public class TimeMachineQuery extends Query<TimeMachines> {
     /**
      * 
      */
-    private static final long serialVersionUID = -5121355570153816079L;
+    private static final long serialVersionUID = 9152911963151770915L;
     private final Map<String, Serializable> params = new HashMap<>();
-    public static final String BASE_URL = "/api/metrics/search";
+    private static final String BASE_URL = "/api/timemachine";
 
-    private MetricQuery() {
+    private TimeMachineQuery() {
     }
 
     @Override
-    public Class<Metrics> getModelClass() {
-        return Metrics.class;
+    public Class<TimeMachines> getModelClass() {
+        return TimeMachines.class;
     }
 
-    public static MetricQuery all() {
-        return new MetricQuery().pageSize(MAX_PAGE_SIZE);
+    public static TimeMachineQuery create() {
+        return new TimeMachineQuery();
     }
 
-    public MetricQuery pageSize(int pageSize) {
-        return (MetricQuery) addParam("ps", pageSize);
+    /**
+     * URL query string, for internal use
+     */
+    public Map<String, Serializable> urlParams() {
+        return params;
+    }
+
+    public TimeMachineQuery metrics(String... s) {
+        return (TimeMachineQuery) addParam("metrics", s);
+    }
+
+    public TimeMachineQuery resource(String... s) {
+        return (TimeMachineQuery) addParam("resource", s);
+    }
+
+    public TimeMachineQuery fromDateTime(Date d) {
+        return (TimeMachineQuery) addParam("fromDateTime", d);
+    }
+
+    public TimeMachineQuery toDateTime(Date d) {
+        return (TimeMachineQuery) addParam("toDateTime", d);
+    }
+
+    public TimeMachineQuery format(String format) {
+        return (TimeMachineQuery) addParam("format", format);
     }
 
     @Override
@@ -63,5 +87,4 @@ public final class MetricQuery extends Query<Metrics> {
     public Map<String, Serializable> getParams() {
         return params;
     }
-
 }

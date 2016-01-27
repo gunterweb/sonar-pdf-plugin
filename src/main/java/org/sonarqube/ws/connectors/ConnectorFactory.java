@@ -19,13 +19,17 @@
  */
 package org.sonarqube.ws.connectors;
 
-import org.sonarqube.ws.client.Host;
+import org.sonarqube.ws.client.SonarHost;
 
+/**
+ * Connector Factory
+ *
+ */
 public class ConnectorFactory {
-	private ConnectorFactory() {
-	}
+    private ConnectorFactory() {
+    }
 
-	public static Connector create(Host server) {
-		return new HttpClient3Connector(server);
-	}
+    public static Connector create(SonarHost server) {
+        return new HttpClient3Connector(server);
+    }
 }

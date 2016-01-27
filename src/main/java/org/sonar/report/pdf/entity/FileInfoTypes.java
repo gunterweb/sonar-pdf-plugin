@@ -17,47 +17,12 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonarqube.ws.client;
+package org.sonar.report.pdf.entity;
 
-public class Host {
-	private String host;
-	private String username;
-	private String password;
-
-	public Host(String host) {
-		this.host = host;
-	}
-
-	public Host(String host, String username, String password) {
-		this.host = host;
-		this.username = username;
-		this.password = password;
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public Host setHost(String host) {
-		this.host = host;
-		return this;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public Host setUsername(String username) {
-		this.username = username;
-		return this;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public Host setPassword(String password) {
-		this.password = password;
-		return this;
-	}
+/**
+ * FileInfo Types
+ *
+ */
+public enum FileInfoTypes {
+    VIOLATIONS_CONTENT, CCN_CONTENT, DUPLICATIONS_CONTENT;
 }

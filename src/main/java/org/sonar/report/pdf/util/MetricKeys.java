@@ -19,36 +19,47 @@
  */
 package org.sonar.report.pdf.util;
 
-public interface MetricKeys {
+/**
+ * Enum for usable metric keys
+ *
+ */
+public enum MetricKeys {
 
-	public static final String PROFILE = "profile";
-	public static final String DUPLICATED_LINES = "duplicated_lines";
-	public static final String DUPLICATED_BLOCKS = "duplicated_blocks";
-	public static final String DUPLICATED_FILES = "duplicated_files";
-	public static final String CLASSES = "classes";
-	public static final String COMMENT_LINES = "comment_lines";
-	public static final String COMPLEXITY = "complexity";
-	public static final String FUNCTIONS = "functions";
-	public static final String NCLOC = "ncloc";
-	public static final String DIRECTORIES = "directories";
-	public static final String COVERAGE = "coverage";
-	public static final String TEST_EXECUTION_TIME = "test_execution_time";
-	public static final String SKIPPED_TESTS = "skipped_tests";
-	public static final String TESTS = "tests";
-	public static final String TEST_ERRORS = "test_errors";
-	public static final String TEST_FAILURES = "test_failures";
-	public static final String TEST_SUCCESS_DENSITY = "test_success_density";
-	public static final String VIOLATIONS = "violations";
-	public static final String FILE_COMPLEXITY_DISTRIBUTION = "file_complexity_distribution";
-	public static final String DUPLICATED_LINES_DENSITY = "duplicated_lines_density";
-	public static final String CLASS_COMPLEXITY = "class_complexity";
-	public static final String FUNCTION_COMPLEXITY = "function_complexity";
-	public static final String COMMENT_LINES_DENSITY = "comment_lines_density";
-	public static final String TECHNICAL_DEBT = "sqale_index";
-	public static final String BLOCKER_VIOLATIONS = "blocker_violations";
-	public static final String CRITICAL_VIOLATIONS = "critical_violations";
-	public static final String MAJOR_VIOLATIONS = "major_violations";
-	public static final String MINOR_VIOLATIONS = "minor_violations";
-	public static final String INFO_VIOLATIONS = "info_violations";
+    PROFILE("profile"), DUPLICATED_LINES("duplicated_lines"), DUPLICATED_BLOCKS("duplicated_blocks"), DUPLICATED_FILES(
+            "duplicated_files"), CLASSES("classes"), COMMENT_LINES("comment_lines"), COMPLEXITY(
+                    "complexity"), FUNCTIONS("functions"), NCLOC("ncloc"), DIRECTORIES("directories"), COVERAGE(
+                            "coverage"), TEST_EXECUTION_TIME("test_execution_time"), SKIPPED_TESTS(
+                                    "skipped_tests"), TESTS("tests"), TEST_ERRORS("test_errors"), TEST_FAILURES(
+                                            "test_failures"), TEST_SUCCESS_DENSITY("test_success_density"), VIOLATIONS(
+                                                    "violations"), FILE_COMPLEXITY_DISTRIBUTION(
+                                                            "file_complexity_distribution"), DUPLICATED_LINES_DENSITY(
+                                                                    "duplicated_lines_density"), CLASS_COMPLEXITY(
+                                                                            "class_complexity"), FUNCTION_COMPLEXITY(
+                                                                                    "function_complexity"), COMMENT_LINES_DENSITY(
+                                                                                            "comment_lines_density"), TECHNICAL_DEBT(
+                                                                                                    "sqale_index"), BLOCKER_VIOLATIONS(
+                                                                                                            "blocker_violations"), CRITICAL_VIOLATIONS(
+                                                                                                                    "critical_violations"), MAJOR_VIOLATIONS(
+                                                                                                                            "major_violations"), MINOR_VIOLATIONS(
+                                                                                                                                    "minor_violations"), INFO_VIOLATIONS(
+                                                                                                                                            "info_violations");
 
+    private final String key;
+
+    MetricKeys(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public static boolean isMetricNeeded(String key) {
+        for (MetricKeys metric : values()) {
+            if (metric.getKey().equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

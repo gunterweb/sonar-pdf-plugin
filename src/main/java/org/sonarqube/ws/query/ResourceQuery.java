@@ -19,188 +19,121 @@
  */
 package org.sonarqube.ws.query;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.sonar.report.pdf.util.MetricKeys;
 import org.sonarqube.ws.client.services.Query;
 import org.sonarqube.ws.model.Resource;
 
+/**
+ * Query for resources
+ *
+ */
 public class ResourceQuery extends Query<Resource> {
 
-	public static final String BASE_URL = "/api/resources";
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7718983822095052052L;
+    private final Map<String, Serializable> params = new HashMap<>();
+    public static final String BASE_URL = "/api/resources";
 
-	public static final int DEPTH_UNLIMITED = -1;
+    public static final int DEPTH_UNLIMITED = -1;
 
-	private Integer depth;
-	private String format;
-	private Boolean includeTrends = null;
-	private Boolean includeAlerts = null;
-	private Integer limit;
-	private String[] metrics;
-	private String[] qualifiers;
-	private String resourceKeyOrId;
-	private String[] rules;
-	private String[] scopes;
+    public ResourceQuery() {
+        super();
+    }
 
-	private Boolean verbose = Boolean.FALSE;
+    public ResourceQuery(String resourceKeyOrId) {
+        this.setResourceKeyOrId(resourceKeyOrId);
+    }
 
-	public ResourceQuery() {
-		super();
-	}
+    public ResourceQuery setDepth(Integer depth) {
+        return (ResourceQuery) addParam("depth", depth);
+    }
 
-	public ResourceQuery(String resourceKeyOrId) {
-		this.resourceKeyOrId = resourceKeyOrId;
-	}
+    public ResourceQuery setAllDepths() {
+        return setDepth(DEPTH_UNLIMITED);
+    }
 
-	public ResourceQuery(long resourceId) {
-		this.resourceKeyOrId = String.valueOf(resourceId);
-	}
+    public ResourceQuery setResourceKeyOrId(String resourceKeyOrId) {
+        return (ResourceQuery) addParam("resource", resourceKeyOrId);
+    }
 
-	public Integer getDepth() {
-		return depth;
-	}
+    public ResourceQuery setResourceId(int resourceId) {
+        return (ResourceQuery) addParam("resource", resourceId);
+    }
 
-	public ResourceQuery setDepth(Integer depth) {
-		this.depth = depth;
-		return this;
-	}
+    public ResourceQuery setLimit(Integer limit) {
+        return (ResourceQuery) addParam("limit", limit);
+    }
 
-	public ResourceQuery setAllDepths() {
-		return setDepth(DEPTH_UNLIMITED);
-	}
+    public ResourceQuery setScopes(String... scopes) {
+        return (ResourceQuery) addParam("scopes", scopes);
+    }
 
-	public String getResourceKeyOrId() {
-		return resourceKeyOrId;
-	}
+    public ResourceQuery setQualifiers(String... qualifiers) {
+        return (ResourceQuery) addParam("qualifiers", qualifiers);
+    }
 
-	public ResourceQuery setResourceKeyOrId(String resourceKeyOrId) {
-		this.resourceKeyOrId = resourceKeyOrId;
-		return this;
-	}
+    public ResourceQuery setMetrics(String... metrics) {
+        return (ResourceQuery) addParam("metrics", metrics);
+    }
 
-	public ResourceQuery setResourceId(int resourceId) {
-		this.resourceKeyOrId = Integer.toString(resourceId);
-		return this;
-	}
+    public ResourceQuery setRules(String... rules) {
+        return (ResourceQuery) addParam("rules", rules);
+    }
 
-	public Integer getLimit() {
-		return limit;
-	}
+    public ResourceQuery setVerbose(Boolean verbose) {
+        return (ResourceQuery) addParam("verbose", verbose);
+    }
 
-	public ResourceQuery setLimit(Integer limit) {
-		this.limit = limit;
-		return this;
-	}
+    public ResourceQuery setIncludeTrends(Boolean includeTrends) {
+        return (ResourceQuery) addParam("includetrends", includeTrends);
+    }
 
-	public String[] getScopes() {
-		return scopes;
-	}
+    public ResourceQuery setIncludeAlerts(Boolean includeAlerts) {
+        return (ResourceQuery) addParam("includealerts", includeAlerts);
+    }
 
-	public ResourceQuery setScopes(String... scopes) {
-		this.scopes = scopes;
-		return this;
-	}
+    public ResourceQuery setFormat(String format) {
+        return (ResourceQuery) addParam("format", format);
+    }
 
-	public String[] getQualifiers() {
-		return qualifiers;
-	}
+    @Override
+    public final Class<Resource> getModelClass() {
+        return Resource.class;
+    }
 
-	public ResourceQuery setQualifiers(String... qualifiers) {
-		this.qualifiers = qualifiers;
-		return this;
-	}
+    public static ResourceQuery createForMetrics(String resourceKeyOrId, String... metricKeys) {
+        return new ResourceQuery(resourceKeyOrId).setMetrics(metricKeys).setVerbose(true).setFormat(JSON_FORMAT);
+    }
 
-	public String[] getMetrics() {
-		return metrics;
-	}
+    public static ResourceQuery createForMetrics(String resourceKeyOrId, MetricKeys metricKey) {
+        return createForMetrics(resourceKeyOrId, metricKey.getKey());
+    }
 
-	public ResourceQuery setMetrics(String... metrics) {
-		this.metrics = metrics;
-		return this;
-	}
+    public static ResourceQuery createForResource(Resource resource, String... metricKeys) {
+        Integer id = resource.getId();
+        if (id == null) {
+            throw new IllegalArgumentException("id must be set");
+        }
+        return new ResourceQuery(id.toString()).setMetrics(metricKeys);
+    }
 
-	public String[] getRules() {
-		return rules;
-	}
+    public static ResourceQuery create(String resourceKey) {
+        return new ResourceQuery(resourceKey);
+    }
 
-	public ResourceQuery setRules(String... rules) {
-		this.rules = rules;
-		return this;
-	}
+    @Override
+    public String getBaseUrl() {
+        return BASE_URL;
+    }
 
-	public Boolean isVerbose() {
-		return verbose;
-	}
-
-	public ResourceQuery setVerbose(Boolean verbose) {
-		this.verbose = verbose;
-		return this;
-	}
-
-	public Boolean isIncludeTrends() {
-		return includeTrends;
-	}
-
-	public ResourceQuery setIncludeTrends(Boolean includeTrends) {
-		this.includeTrends = includeTrends;
-		return this;
-	}
-
-	public Boolean isIncludeAlerts() {
-		return includeAlerts;
-	}
-
-	public ResourceQuery setIncludeAlerts(Boolean includeAlerts) {
-		this.includeAlerts = includeAlerts;
-		return this;
-	}
-
-	@Override
-	public String getUrl() {
-		StringBuilder url = new StringBuilder(BASE_URL);
-		url.append('?');
-		appendUrlParameter(url, "depth", depth);
-		appendUrlParameter(url, "format", format);
-		appendUrlParameter(url, "includealerts", includeAlerts);
-		appendUrlParameter(url, "includetrends", includeTrends);
-		appendUrlParameter(url, "limit", limit);
-		appendUrlParameter(url, "metrics", metrics);
-		appendUrlParameter(url, "qualifiers", qualifiers);
-		appendUrlParameter(url, "resource", resourceKeyOrId);
-		appendUrlParameter(url, "rules", rules);
-		appendUrlParameter(url, "scopes", scopes);
-		appendUrlParameter(url, "verbose", verbose);
-		return url.toString();
-	}
-
-	public String getFormat() {
-		return format;
-
-	}
-
-	public ResourceQuery setFormat(String format) {
-		this.format = format;
-		return this;
-	}
-
-	@Override
-	public final Class<Resource> getModelClass() {
-		return Resource.class;
-	}
-
-	public static ResourceQuery createForMetrics(String resourceKeyOrId, String... metricKeys) {
-		return new ResourceQuery(resourceKeyOrId).setMetrics(metricKeys).setVerbose(true).setFormat("json");
-	}
-
-	public static ResourceQuery createForResource(Resource resource, String... metricKeys) {
-		Integer id = resource.getId();
-		if (id == null) {
-			throw new IllegalArgumentException("id must be set");
-		}
-		return new ResourceQuery(id.toString()).setMetrics(metricKeys);
-	}
-
-	/**
-	 * @since 2.10
-	 */
-	public static ResourceQuery create(String resourceKey) {
-		return new ResourceQuery(resourceKey);
-	}
+    @Override
+    public Map<String, Serializable> getParams() {
+        return params;
+    }
 }

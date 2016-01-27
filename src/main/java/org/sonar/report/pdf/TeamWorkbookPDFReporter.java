@@ -28,6 +28,7 @@ import java.util.Properties;
 import org.sonar.report.pdf.entity.Project;
 import org.sonar.report.pdf.entity.Rule;
 import org.sonar.report.pdf.entity.Violation;
+import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonar.report.pdf.util.Credentials;
 
 import com.lowagie.text.Chapter;
@@ -38,102 +39,146 @@ import com.lowagie.text.pdf.PdfPTable;
 
 /**
  * 
- *
+ * Workbook for Team PDF Reporter
  */
 public class TeamWorkbookPDFReporter extends ExecutivePDFReporter {
 
-	public TeamWorkbookPDFReporter(final Credentials credentials, final URL logo, final String projectKey,
-			final Properties configProperties, final Properties langProperties) {
-		super(credentials, logo, projectKey, configProperties, langProperties);
-	}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4994742577755351762L;
 
-	@Override
-	protected void printSpecificData(Project project, Chapter chapter) {
+    public TeamWorkbookPDFReporter(final Credentials credentials, final URL logo, final String projectKey,
+            final Properties configProperties, final Properties langProperties) {
+        super(credentials, logo, projectKey, configProperties, langProperties);
+    }
 
-		printMostViolatedRulesDetails(project, chapter);
-	}
+    /**
+     * @see org.sonar.report.pdf.ExecutivePDFReporter#printSpecificData(org.sonar.report.pdf.entity.Project,
+     *      com.lowagie.text.Chapter)
+     */
+    @Override
+    protected void printSpecificData(Project project, Chapter chapter) throws ReportException {
+        printMostViolatedRulesDetails(project, chapter);
+    }
 
-	private void printMostViolatedRulesDetails(final Project project, final Chapter chapter) {
-		if (project.getMostViolatedRules() != null && !project.getMostViolatedRules().isEmpty()) {
-			Section section = chapter
-					.addSection(new Paragraph(getTextProperty(GENERAL_VIOLATIONS_DETAILS), Style.TITLE_FONT));
-			for (Rule rule : project.getMostViolatedRules()) {
-				List<String> files = new LinkedList<>();
-				List<String> lines = new LinkedList<>();
-				if (rule.getTopViolations() != null) {
-					for (Violation violation : rule.getTopViolations()) {
-						String[] components = violation.getResource().split("/");
-						files.add(components[components.length - 1]);
-						lines.add(violation.getLine());
-					}
-				}
-				section.add(createViolationsDetailedTable(rule.getName(), files, lines));
-			}
-		}
-	}
+    /**
+     * Print details for most violated rules
+     * 
+     * @param project
+     *            current project
+     * @param chapter
+     *            current chapter
+     */
+    private void printMostViolatedRulesDetails(final Project project, final Chapter chapter) {
+        if (project.getMostViolatedRules() != null && !project.getMostViolatedRules().isEmpty()) {
+            Section section = chapter.addSection(
+                    new Paragraph(getTextProperty(PDFResources.GENERAL_VIOLATIONS_DETAILS), Style.TITLE_FONT));
+            for (Rule rule : project.getMostViolatedRules()) {
+                List<String> files = new LinkedList<>();
+                List<String> lines = new LinkedList<>();
+                addViolation(rule, files, lines);
+                section.add(createViolationsDetailedTable(rule.getName(), files, lines));
+            }
+        }
+    }
 
-	private PdfPTable createViolationsDetailedTable(final String ruleName, final List<String> files,
-			final List<String> lines) {
+    /**
+     * Add violation
+     * 
+     * @param rule
+     *            rule
+     * @param files
+     *            files
+     * @param files
+     *            files
+     */
+    private void addViolation(Rule rule, List<String> files, List<String> lines) {
+        if (rule.getTopViolations() != null) {
+            for (Violation violation : rule.getTopViolations()) {
+                String[] components = violation.getResource().split("/");
+                files.add(components[components.length - 1]);
+                lines.add(violation.getLine());
+            }
+        }
+    }
 
-		PdfPTable table = new PdfPTable(10);
-		table.getDefaultCell().setColspan(1);
-		table.getDefaultCell().setBackgroundColor(new Color(255, 228, 181));
-		table.addCell(new Phrase(getTextProperty("general.rule"), Style.NORMAL_FONT));
-		table.getDefaultCell().setColspan(9);
-		table.getDefaultCell().setBackgroundColor(Color.WHITE);
-		table.addCell(new Phrase(ruleName, Style.NORMAL_FONT));
-		table.getDefaultCell().setColspan(10);
-		table.getDefaultCell().setBackgroundColor(Color.GRAY);
-		table.addCell("");
-		table.getDefaultCell().setColspan(7);
-		table.getDefaultCell().setBackgroundColor(new Color(255, 228, 181));
-		table.addCell(new Phrase(getTextProperty("general.file"), Style.NORMAL_FONT));
-		table.getDefaultCell().setColspan(3);
-		table.addCell(new Phrase(getTextProperty("general.line"), Style.NORMAL_FONT));
-		table.getDefaultCell().setBackgroundColor(Color.WHITE);
+    /**
+     * Create table for violation details
+     * 
+     * @param ruleName
+     *            name of the rules
+     * @param files
+     *            violated files
+     * @param lines
+     *            violated lines
+     * @return The table (iText table) ready to add to the document
+     */
+    private PdfPTable createViolationsDetailedTable(final String ruleName, final List<String> files,
+            final List<String> lines) {
 
-		int i = 0;
-		String lineNumbers = "";
-		if (!files.isEmpty()) {
-			while (i < files.size() - 1) {
-				if (("").equals(lineNumbers)) {
-					lineNumbers += lines.get(i);
-				} else {
-					lineNumbers += ", " + lines.get(i);
-				}
+        PdfPTable table = new PdfPTable(10);
+        table.getDefaultCell().setColspan(1);
+        table.getDefaultCell().setBackgroundColor(new Color(255, 228, 181));
+        table.addCell(new Phrase(getTextProperty(PDFResources.GENERAL_RULE), Style.NORMAL_FONT));
+        table.getDefaultCell().setColspan(9);
+        table.getDefaultCell().setBackgroundColor(Color.WHITE);
+        table.addCell(new Phrase(ruleName, Style.NORMAL_FONT));
+        table.getDefaultCell().setColspan(10);
+        table.getDefaultCell().setBackgroundColor(Color.GRAY);
+        table.addCell("");
+        table.getDefaultCell().setColspan(7);
+        table.getDefaultCell().setBackgroundColor(new Color(255, 228, 181));
+        table.addCell(new Phrase(getTextProperty(PDFResources.GENERAL_FILE), Style.NORMAL_FONT));
+        table.getDefaultCell().setColspan(3);
+        table.addCell(new Phrase(getTextProperty(PDFResources.GENERAL_LINE), Style.NORMAL_FONT));
+        table.getDefaultCell().setBackgroundColor(Color.WHITE);
 
-				if (!files.get(i).equals(files.get(i + 1))) {
-					table.getDefaultCell().setColspan(7);
-					table.addCell(files.get(i));
-					table.getDefaultCell().setColspan(3);
-					table.addCell(lineNumbers);
-					lineNumbers = "";
-				}
-				i++;
-			}
-		}
+        int i = 0;
+        String lineNumbers = "";
+        if (!files.isEmpty()) {
+            while (i < files.size() - 1) {
+                if (("").equals(lineNumbers)) {
+                    lineNumbers += lines.get(i);
+                } else {
+                    lineNumbers += ", " + lines.get(i);
+                }
 
-		if (!files.isEmpty()) {
-			table.getDefaultCell().setColspan(7);
-			table.addCell(files.get(files.size() - 1));
-			table.getDefaultCell().setColspan(3);
-			if (("").equals(lineNumbers)) {
-				lineNumbers += lines.get(i);
-			} else {
-				lineNumbers += ", " + lines.get(lines.size() - 1);
-			}
-			table.addCell(lineNumbers);
-		}
+                if (!files.get(i).equals(files.get(i + 1))) {
+                    table.getDefaultCell().setColspan(7);
+                    table.addCell(files.get(i));
+                    table.getDefaultCell().setColspan(3);
+                    table.addCell(lineNumbers);
+                    lineNumbers = "";
+                }
+                i++;
+            }
+        }
 
-		table.setSpacingBefore(20);
-		table.setSpacingAfter(20);
-		table.setLockedWidth(false);
-		table.setWidthPercentage(90);
-		return table;
-	}
+        if (!files.isEmpty()) {
+            table.getDefaultCell().setColspan(7);
+            table.addCell(files.get(files.size() - 1));
+            table.getDefaultCell().setColspan(3);
+            if (("").equals(lineNumbers)) {
+                lineNumbers += lines.get(i);
+            } else {
+                lineNumbers += ", " + lines.get(lines.size() - 1);
+            }
+            table.addCell(lineNumbers);
+        }
 
-	@Override
-	public String getReportType() {
-		return WORKBOOK_REPORT_TYPE;
-	}
+        table.setSpacingBefore(20);
+        table.setSpacingAfter(20);
+        table.setLockedWidth(false);
+        table.setWidthPercentage(90);
+        return table;
+    }
+
+    /**
+     * @see org.sonar.report.pdf.ExecutivePDFReporter#getReportType()
+     */
+    @Override
+    public String getReportType() {
+        return PDFResources.WORKBOOK_REPORT_TYPE;
+    }
 }

@@ -19,9 +19,11 @@
  */
 package org.sonarqube.ws.client;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonarqube.ws.client.services.Query;
 import org.sonarqube.ws.client.services.WSUtils;
 import org.sonarqube.ws.client.unmarshallers.ListOfJson;
@@ -34,59 +36,99 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
-public class WSClient {
+/**
+ * Sonar Webservice client
+ *
+ */
+public class WSClient implements Serializable {
 
-	private static Gson gson;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -515443204212628343L;
+    private static Gson gson;
 
-	static {
-		WSUtils.setInstance(new JdkUtils());
-		gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
-	}
+    static {
+        WSUtils.setInstance(new JdkUtils());
+        gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+    }
 
-	private Connector connector;
+    private Connector connector;
 
-	public WSClient(Connector connector) {
-		this.connector = connector;
-	}
+    public WSClient(Connector connector) {
+        this.connector = connector;
+    }
 
-	public Connector getConnector() {
-		return connector;
-	}
+    public Connector getConnector() {
+        return connector;
+    }
 
-	public <M extends Model> M find(Query<M> query) {
-		String json = connector.execute(query);
-		M result = null;
-		if (json != null) {
-			try {
-				result = gson.fromJson(json, query.getModelClass());
-			} catch (JsonSyntaxException e) {
-				throw new UnmarshalException(query, json, e);
-			}
-		}
-		return result;
-	}
+    /**
+     * Find request
+     * 
+     * @param query
+     *            query
+     * @return Model
+     */
+    public <M extends Model> M find(Query<M> query) throws ReportException {
+        String json = connector.execute(query);
+        M result = null;
+        if (json != null) {
+            try {
+                result = gson.fromJson(json, query.getModelClass());
+            } catch (JsonSyntaxException e) {
+                throw new UnmarshalException(query, json, e);
+            }
+        }
+        return result;
+    }
 
-	public <M extends Model> List<M> findAll(Query<M> query) {
-		String json = connector.execute(query);
-		List<M> result;
-		if (json == null) {
-			result = Collections.emptyList();
-		} else {
-			try {
-				result = gson.fromJson(json, new ListOfJson<M>(query.getModelClass()));
-			} catch (Exception e) {
-				throw new UnmarshalException(query, json, e);
-			}
-		}
-		return result;
-	}
+    /**
+     * Find all request
+     * 
+     * @param query
+     *            query
+     * @return List of Model
+     */
+    public <M extends Model> List<M> findAll(Query<M> query) throws ReportException {
+        String json = connector.execute(query);
+        List<M> result;
+        if (json == null) {
+            result = Collections.emptyList();
+        } else {
+            try {
+                result = gson.fromJson(json, new ListOfJson<M>(query.getModelClass()));
+            } catch (Exception e) {
+                throw new UnmarshalException(query, json, e);
+            }
+        }
+        return result;
+    }
 
-	public static WSClient create(String host) {
-		return new WSClient(ConnectorFactory.create(new Host(host)));
-	}
+    /**
+     * Create a client
+     * 
+     * @param host
+     *            host
+     * @return WSClient
+     */
+    public static WSClient create(String host) {
+        return create(host, null, null);
+    }
 
-	public static WSClient create(String host, String username, String password) {
-		return new WSClient(ConnectorFactory.create(new Host(host, username, password)));
-	}
+    /**
+     * Create a client
+     * 
+     * @param host
+     *            host
+     * @param username
+     *            username
+     * @param password
+     *            password
+     * @return WSClient
+     */
+    public static WSClient create(String host, String username, String password) {
+        return new WSClient(ConnectorFactory.create(new SonarHost(host, username, password)));
+    }
 
 }

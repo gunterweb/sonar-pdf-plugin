@@ -22,144 +22,145 @@ package org.sonar.report.pdf.entity;
 import java.util.Iterator;
 import java.util.List;
 
+import org.sonar.report.pdf.util.MetricKeys;
+
 /**
  * This class encapsulates the Project info.
  */
-public class Project {
+public class Project implements Entity {
 
-	// Project info
-	private short id;
-	private String key;
-	private String name;
-	private String description;
-	private List<String> links;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1330596249644859216L;
+    // Project info
+    private short id;
+    private String key;
+    private String name;
+    private String description;
 
-	// Measures
-	private Measures measures;
+    // Measures
+    private Measures measures;
 
-	// Child projects
-	private List<Project> subprojects;
+    // Child projects
+    private List<Project> subprojects;
 
-	// Most violated rules
-	private List<Rule> mostViolatedRules;
+    // Most violated rules
+    private List<Rule> mostViolatedRules;
 
-	// Most complex elements
-	private List<FileInfo> mostComplexFiles;
+    // Most complex elements
+    private List<FileInfo> mostComplexFiles;
 
-	// Most violated files
-	private List<FileInfo> mostViolatedFiles;
+    // Most violated files
+    private List<FileInfo> mostViolatedFiles;
 
-	// Most duplicated files
-	private List<FileInfo> mostDuplicatedFiles;
+    // Most duplicated files
+    private List<FileInfo> mostDuplicatedFiles;
 
-	public Project(final String key) {
-		this.key = key;
-	}
+    public Project(final String key) {
+        this.key = key;
+    }
 
-	public Measure getMeasure(final String measureKey) {
-		if (measures.containsMeasure(measureKey)) {
-			return measures.getMeasure(measureKey);
-		} else {
-			return new Measure(null, EntityUtils.NA_METRICS);
-		}
-	}
+    public Measure getMeasure(final String measureKey) {
+        if (measures.containsMeasure(measureKey)) {
+            return measures.getMeasure(measureKey);
+        } else {
+            return new Measure(null, EntityUtils.NA_METRICS.getKey());
+        }
+    }
 
-	public Project getChildByKey(final String key) {
-		Iterator<Project> it = this.subprojects.iterator();
-		while (it.hasNext()) {
-			Project child = it.next();
-			if (child.getKey().equals(key)) {
-				return child;
-			}
-		}
-		return null;
-	}
+    public Measure getMeasure(final MetricKeys measureKey) {
+        return getMeasure(measureKey.getKey());
+    }
 
-	public void setId(final short id) {
-		this.id = id;
-	}
+    public Project getChildByKey(final String key) {
+        Iterator<Project> it = this.subprojects.iterator();
+        while (it.hasNext()) {
+            Project child = it.next();
+            if (child.getKey().equals(key)) {
+                return child;
+            }
+        }
+        return null;
+    }
 
-	public void setKey(final String key) {
-		this.key = key;
-	}
+    public void setId(final short id) {
+        this.id = id;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public void setKey(final String key) {
+        this.key = key;
+    }
 
-	public void setDescription(final String description) {
-		this.description = description;
-	}
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	public void setLinks(final List<String> links) {
-		this.links = links;
-	}
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
-	public short getId() {
-		return id;
-	}
+    public short getId() {
+        return id;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public List<String> getLinks() {
-		return links;
-	}
+    public List<Project> getSubprojects() {
+        return subprojects;
+    }
 
-	public List<Project> getSubprojects() {
-		return subprojects;
-	}
+    public void setSubprojects(final List<Project> subprojects) {
+        this.subprojects = subprojects;
+    }
 
-	public void setSubprojects(final List<Project> subprojects) {
-		this.subprojects = subprojects;
-	}
+    public Measures getMeasures() {
+        return measures;
+    }
 
-	public Measures getMeasures() {
-		return measures;
-	}
+    public void setMeasures(final Measures measures) {
+        this.measures = measures;
+    }
 
-	public void setMeasures(final Measures measures) {
-		this.measures = measures;
-	}
+    public List<Rule> getMostViolatedRules() {
+        return mostViolatedRules;
+    }
 
-	public List<Rule> getMostViolatedRules() {
-		return mostViolatedRules;
-	}
+    public List<FileInfo> getMostViolatedFiles() {
+        return mostViolatedFiles;
+    }
 
-	public List<FileInfo> getMostViolatedFiles() {
-		return mostViolatedFiles;
-	}
+    public void setMostViolatedRules(final List<Rule> mostViolatedRules) {
+        this.mostViolatedRules = mostViolatedRules;
+    }
 
-	public void setMostViolatedRules(final List<Rule> mostViolatedRules) {
-		this.mostViolatedRules = mostViolatedRules;
-	}
+    public void setMostViolatedFiles(final List<FileInfo> mostViolatedFiles) {
+        this.mostViolatedFiles = mostViolatedFiles;
+    }
 
-	public void setMostViolatedFiles(final List<FileInfo> mostViolatedFiles) {
-		this.mostViolatedFiles = mostViolatedFiles;
-	}
+    public void setMostComplexFiles(final List<FileInfo> mostComplexFiles) {
+        this.mostComplexFiles = mostComplexFiles;
+    }
 
-	public void setMostComplexFiles(final List<FileInfo> mostComplexFiles) {
-		this.mostComplexFiles = mostComplexFiles;
-	}
+    public List<FileInfo> getMostComplexFiles() {
+        return mostComplexFiles;
+    }
 
-	public List<FileInfo> getMostComplexFiles() {
-		return mostComplexFiles;
-	}
+    public List<FileInfo> getMostDuplicatedFiles() {
+        return mostDuplicatedFiles;
+    }
 
-	public List<FileInfo> getMostDuplicatedFiles() {
-		return mostDuplicatedFiles;
-	}
-
-	public void setMostDuplicatedFiles(final List<FileInfo> mostDuplicatedFiles) {
-		this.mostDuplicatedFiles = mostDuplicatedFiles;
-	}
+    public void setMostDuplicatedFiles(final List<FileInfo> mostDuplicatedFiles) {
+        this.mostDuplicatedFiles = mostDuplicatedFiles;
+    }
 }

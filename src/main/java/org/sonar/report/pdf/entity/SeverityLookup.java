@@ -17,17 +17,20 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonarqube.ws.model;
+package org.sonar.report.pdf.entity;
 
-public class Attribut implements Model {
-	private String jiraIssueKey;
+import java.util.HashMap;
+import java.util.Map;
 
-	public String getJiraIssueKey() {
-		return jiraIssueKey;
-	}
+/**
+ * Lookup class for Serverity
+ *
+ */
+public final class SeverityLookup {
+    protected static final Map<String, Severity> lookup = new HashMap<String, Severity>();
 
-	public void setJiraIssueKey(String jiraIssueKey) {
-		this.jiraIssueKey = jiraIssueKey;
-	}
+    private SeverityLookup() {
+        super();
+    }
 
 }

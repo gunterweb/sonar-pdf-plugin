@@ -17,23 +17,14 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.report.pdf.builder;
+package org.sonar.report.pdf.entity;
 
 import java.io.Serializable;
 
 /**
- * 
- * Builders abstract class
+ * Entity interface
+ *
  */
-public abstract class AbstractBuilder implements Serializable {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5419049746955698049L;
-
-    protected AbstractBuilder() {
-        super();
-    }
+public interface Entity extends Serializable {
 
 }

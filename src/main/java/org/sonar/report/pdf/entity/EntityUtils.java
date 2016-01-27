@@ -19,6 +19,20 @@
  */
 package org.sonar.report.pdf.entity;
 
-public interface EntityUtils {
-	public static final String NA_METRICS = "N/A";
+/**
+ * Enum for Entity utils
+ *
+ */
+public enum EntityUtils {
+    NA_METRICS("N/A");
+    private final String key;
+
+    private EntityUtils(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
 }

@@ -28,50 +28,54 @@ import java.util.Set;
 /**
  * This class encapsulates the measures info.
  */
-public class Measures {
+public class Measures implements Entity {
 
-	private Map<String, Measure> measuresTable = new HashMap<>();
-	private Date date;
-	private String version = EntityUtils.NA_METRICS;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -9169792843537741693L;
+    private Map<String, Measure> measuresTable = new HashMap<>();
+    private Date date;
+    private String version = EntityUtils.NA_METRICS.getKey();
 
-	public Measures() {
-		super();
-	}
+    public Measures() {
+        super();
+    }
 
-	public Date getDate() {
-		return date;
-	}
+    public Date getDate() {
+        return date;
+    }
 
-	public void setDate(final Date date) throws ParseException {
-		this.date = date;
-	}
+    public void setDate(final Date date) throws ParseException {
+        this.date = date;
+    }
 
-	public String getVersion() {
-		return version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public void setVersion(final String version) {
-		this.version = version;
-	}
+    public void setVersion(final String version) {
+        this.version = version;
+    }
 
-	public int getMeasuresCount() {
-		return measuresTable.size();
-	}
+    public int getMeasuresCount() {
+        return measuresTable.size();
+    }
 
-	public Set<String> getMeasuresKeys() {
-		return measuresTable.keySet();
-	}
+    public Set<String> getMeasuresKeys() {
+        return measuresTable.keySet();
+    }
 
-	public Measure getMeasure(final String key) {
-		return measuresTable.get(key);
-	}
+    public Measure getMeasure(final String key) {
+        return measuresTable.get(key);
+    }
 
-	public void addMeasure(final String name, final Measure value) {
-		measuresTable.put(name, value);
-	}
+    public void addMeasure(final String name, final Measure value) {
+        measuresTable.put(name, value);
+    }
 
-	public boolean containsMeasure(final String measureKey) {
-		return measuresTable.containsKey(measureKey);
-	}
+    public boolean containsMeasure(final String measureKey) {
+        return measuresTable.containsKey(measureKey);
+    }
 
 }

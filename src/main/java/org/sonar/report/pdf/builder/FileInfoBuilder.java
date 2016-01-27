@@ -23,51 +23,70 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.sonar.report.pdf.entity.FileInfo;
+import org.sonar.report.pdf.entity.FileInfoTypes;
 import org.sonar.report.pdf.util.MetricKeys;
 import org.sonarqube.ws.model.Resource;
 
+/**
+ * Builder for file information
+ *
+ */
 public class FileInfoBuilder extends AbstractBuilder {
 
-	private FileInfoBuilder() {
-		super();
-	}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1775338259201548335L;
 
-	public static List<FileInfo> initFromDocument(final List<Resource> resources, final int content) {
-		List<FileInfo> fileInfoList = new LinkedList<>();
-		if (resources != null) {
-			for (Resource fileNode : resources) {
-				FileInfo fileInfo = new FileInfo();
-				initFromNode(fileInfo, fileNode, content);
-				if (fileInfo.isContentSet(content)) {
-					fileInfoList.add(fileInfo);
-				}
+    private FileInfoBuilder() {
+        super();
+    }
 
-			}
-		}
-		return fileInfoList;
-	}
+    /**
+     * Initialization of File Information from resources
+     * 
+     * @param resources
+     *            resources
+     * @param type
+     *            FileInfoTypes
+     * @return
+     */
+    public static List<FileInfo> initFromDocument(final List<Resource> resources, final FileInfoTypes type) {
+        List<FileInfo> fileInfoList = new LinkedList<>();
+        if (resources != null) {
+            for (Resource fileNode : resources) {
+                FileInfo fileInfo = new FileInfo();
+                initFromNode(fileInfo, fileNode, type);
+                if (fileInfo.isContentSet(type)) {
+                    fileInfoList.add(fileInfo);
+                }
 
-	/**
-	 * A FileInfo object could contain information about violations, ccn or
-	 * duplications, this cases are distinguished in function of content param,
-	 * and defined by project context.
-	 * 
-	 * @param fileNode
-	 *            DOM Node that contains file info
-	 * @param content
-	 *            Type of content
-	 */
-	public static void initFromNode(final FileInfo fileInfo, final Resource fileNode, final int content) {
-		fileInfo.setKey(fileNode.getKey());
-		fileInfo.setName(fileNode.getName());
+            }
+        }
+        return fileInfoList;
+    }
 
-		if (content == FileInfo.VIOLATIONS_CONTENT) {
-			fileInfo.setViolations(fileNode.getMeasure(MetricKeys.VIOLATIONS).getFrmt_val());
-		} else if (content == FileInfo.CCN_CONTENT) {
-			fileInfo.setComplexity(fileNode.getMeasure(MetricKeys.COMPLEXITY).getFrmt_val());
-		} else if (content == FileInfo.DUPLICATIONS_CONTENT) {
-			fileInfo.setDuplicatedLines(fileNode.getMeasure(MetricKeys.DUPLICATED_LINES).getFrmt_val());
-		}
-	}
+    /**
+     * A FileInfo object could contain information about violations, ccn or
+     * duplications, this cases are distinguished in function of content param,
+     * and defined by project context.
+     * 
+     * @param fileNode
+     *            DOM Node that contains file info
+     * @param type
+     *            Type of content
+     */
+    public static void initFromNode(final FileInfo fileInfo, final Resource fileNode, final FileInfoTypes type) {
+        fileInfo.setKey(fileNode.getKey());
+        fileInfo.setName(fileNode.getName());
+
+        if (type == FileInfoTypes.VIOLATIONS_CONTENT) {
+            fileInfo.setViolations(fileNode.getMeasure(MetricKeys.VIOLATIONS).getFormattedValue());
+        } else if (type == FileInfoTypes.CCN_CONTENT) {
+            fileInfo.setComplexity(fileNode.getMeasure(MetricKeys.COMPLEXITY).getFormattedValue());
+        } else if (type == FileInfoTypes.DUPLICATIONS_CONTENT) {
+            fileInfo.setDuplicatedLines(fileNode.getMeasure(MetricKeys.DUPLICATED_LINES).getFormattedValue());
+        }
+    }
 
 }

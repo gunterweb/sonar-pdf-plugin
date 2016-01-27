@@ -33,82 +33,89 @@ import org.json.simple.JSONValue;
 import org.sonarqube.ws.client.services.WSUtils;
 import org.sonarqube.ws.client.unmarshallers.JsonUtils;
 
+/**
+ * JDK Utils
+ *
+ */
 public class JdkUtils extends WSUtils {
 
-	@Override
-	public String format(Date date, String format) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-		return dateFormat.format(date);
-	}
+    @Override
+    public String format(Date date, String format) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(date);
+    }
 
-	@Override
-	public String encodeUrl(String url) {
-		try {
-			return URLEncoder.encode(url, "UTF-8");
+    @Override
+    public String encodeUrl(String url) {
+        try {
+            return URLEncoder.encode(url, "UTF-8");
 
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalStateException("Encoding not supported", e);
-		}
-	}
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("Encoding not supported", e);
+        }
+    }
 
-	@Override
-	public Object getField(Object json, String field) {
-		return ((JSONObject) json).get(field);
-	}
+    @Override
+    public Object getField(Object json, String field) {
+        return ((JSONObject) json).get(field);
+    }
 
-	@Override
-	@CheckForNull
-	public String getString(Object json, String field) {
-		return JsonUtils.getString((JSONObject) json, field);
-	}
+    @Override
+    @CheckForNull
+    public String getString(Object json, String field) {
+        return JsonUtils.getString((JSONObject) json, field);
+    }
 
-	@Override
-	@CheckForNull
-	public Boolean getBoolean(Object json, String field) {
-		return JsonUtils.getBoolean((JSONObject) json, field);
-	}
+    @Override
+    @CheckForNull
+    public Boolean getBoolean(Object json, String field) {
+        return JsonUtils.getBoolean((JSONObject) json, field);
+    }
 
-	@Override
-	@CheckForNull
-	public Integer getInteger(Object json, String field) {
-		return JsonUtils.getInteger((JSONObject) json, field);
-	}
+    @Override
+    @CheckForNull
+    public Integer getInteger(Object json, String field) {
+        return JsonUtils.getInteger((JSONObject) json, field);
+    }
 
-	@Override
-	@CheckForNull
-	public Double getDouble(Object json, String field) {
-		return JsonUtils.getDouble((JSONObject) json, field);
-	}
+    @Override
+    @CheckForNull
+    public Double getDouble(Object json, String field) {
+        return JsonUtils.getDouble((JSONObject) json, field);
+    }
 
-	@Override
-	@CheckForNull
-	public Long getLong(Object json, String field) {
-		return JsonUtils.getLong((JSONObject) json, field);
-	}
+    @Override
+    @CheckForNull
+    public Long getLong(Object json, String field) {
+        return JsonUtils.getLong((JSONObject) json, field);
+    }
 
-	@Override
-	@CheckForNull
-	public Date getDateTime(Object json, String field) {
-		return JsonUtils.getDateTime((JSONObject) json, field);
-	}
+    @Override
+    @CheckForNull
+    public Date getDateTime(Object json, String field) {
+        return JsonUtils.getDateTime((JSONObject) json, field);
+    }
 
-	@Override
-	public int getArraySize(Object array) {
-		return ((ArrayList) array).size();
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public int getArraySize(Object array) {
+        return ((ArrayList) array).size();
+    }
 
-	@Override
-	public Object getArrayElement(Object array, int i) {
-		return ((ArrayList) array).get(i);
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Object getArrayElement(Object array, int i) {
+        return ((ArrayList) array).get(i);
+    }
 
-	@Override
-	public Object parse(String jsonStr) {
-		return JSONValue.parse(jsonStr);
-	}
+    @Override
+    public Object parse(String jsonStr) {
+        return JSONValue.parse(jsonStr);
+    }
 
-	@Override
-	public Set<String> getFields(Object json) {
-		return ((JSONObject) json).keySet();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Set<String> getFields(Object json) {
+        return ((JSONObject) json).keySet();
+    }
 }

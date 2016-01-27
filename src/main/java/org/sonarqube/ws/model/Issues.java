@@ -22,36 +22,48 @@ package org.sonarqube.ws.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Issues model
+ *
+ */
 public class Issues implements Model {
-	private final List<Issue> issues = new ArrayList<>();
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3032289626485456483L;
 
-	private final List<Component> components = new ArrayList<>();
-	private final List<Rule> rules = new ArrayList<>();
-	private final List<User> users = new ArrayList<>();
-	private Paging paging;
+    @SerializedName("issues")
+    private final List<Issue> issuesList = new ArrayList<>();
 
-	public Paging getPaging() {
-		return paging;
-	}
+    private final List<Component> components = new ArrayList<>();
+    private final List<Rule> rules = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
+    private Paging paging;
 
-	public void setPaging(Paging paging) {
-		this.paging = paging;
-	}
+    public Paging getPaging() {
+        return paging;
+    }
 
-	public List<Issue> getIssues() {
-		return issues;
-	}
+    public void setPaging(Paging paging) {
+        this.paging = paging;
+    }
 
-	public List<Component> getComponents() {
-		return components;
-	}
+    public List<Issue> getIssues() {
+        return issuesList;
+    }
 
-	public List<Rule> getRules() {
-		return rules;
-	}
+    public List<Component> getComponents() {
+        return components;
+    }
 
-	public List<User> getUsers() {
-		return users;
-	}
+    public List<Rule> getRules() {
+        return rules;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
 
 }

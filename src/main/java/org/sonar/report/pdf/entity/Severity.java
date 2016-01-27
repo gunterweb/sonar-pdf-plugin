@@ -20,108 +20,54 @@
 package org.sonar.report.pdf.entity;
 
 import java.awt.Color;
+import java.util.Arrays;
+
+import org.sonar.report.pdf.entity.exception.ReportException;
 
 /**
- * Priorities.
+ * Bean defining severities.
  */
-public class Severity implements Comparable<Severity> {
-	private String severity;
+public enum Severity {
+    INFO("INFO", 5, new Color(51, 255, 51)), MINOR("MINOR", 4, new Color(153, 255, 51)), MAJOR("MAJOR", 3,
+            new Color(255, 255, 51)), CRITICAL("CRITICAL", 2, new Color(255, 153, 51)), BLOCKER("BLOCKER", 1,
+                    new Color(255, 51, 51));
 
-	public static final String INFO = "INFO";
-	public static final String MINOR = "MINOR";
-	public static final String MAJOR = "MAJOR";
-	public static final String CRITICAL = "CRITICAL";
-	public static final String BLOCKER = "BLOCKER";
+    private final Integer intValue;
+    private final String value;
+    private final Color color;
 
-	public Severity(String severity) {
-		this.severity = severity;
-	}
+    private Severity(String value, Integer intValue, Color color) {
+        this.intValue = intValue;
+        this.value = value;
+        this.color = color;
+        SeverityLookup.lookup.put(value, this);
+    }
 
-	public static String[] getSeverityArray() {
-		return new String[] { INFO, MINOR, MAJOR, CRITICAL, BLOCKER };
-	}
+    public Color getColor() {
+        return color;
+    }
 
-	private Integer getIntFromSeverity(Severity severity) {
-		int intValue;
-		switch (severity.getSeverity()) {
-		case INFO:
-			intValue = 5;
-			break;
-		case MINOR:
-			intValue = 4;
-			break;
+    public Integer getIntValue() {
+        return intValue;
+    }
 
-		case MAJOR:
-			intValue = 3;
-			break;
+    public String getValue() {
+        return value;
+    }
 
-		case CRITICAL:
-			intValue = 2;
-			break;
+    private static String[] getNames(Class<? extends Enum<?>> e) {
+        return Arrays.toString(e.getEnumConstants()).replaceAll("^.|.$", "").split(", ");
+    }
 
-		case BLOCKER:
-			intValue = 1;
-			break;
+    public static String[] getSeverityArray() {
+        return getNames(Severity.class);
+    }
 
-		default:
-			intValue = 0;
-		}
-		return intValue;
-	}
-
-	public Color toColor() {
-		Color color;
-		switch (severity) {
-		case INFO:
-			color = new Color(51, 255, 51);
-			break;
-		case MINOR:
-			color = new Color(153, 255, 51);
-			break;
-		case MAJOR:
-			color = new Color(255, 255, 51);
-			break;
-		case CRITICAL:
-			color = new Color(255, 153, 51);
-			break;
-		case BLOCKER:
-			color = new Color(255, 51, 51);
-			break;
-		default:
-			color = Color.WHITE;
-		}
-		return color;
-	}
-
-	public String getSeverity() {
-		return severity;
-	}
-
-	public void setSeverity(String severity) {
-		this.severity = severity;
-	}
-
-	@Override
-	public int compareTo(Severity o) {
-		if (this == null || o == null) {
-			return 0;
-		} else {
-			return getIntFromSeverity(this).compareTo(getIntFromSeverity(o));
-		}
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Severity) {
-			return getIntFromSeverity(this) == getIntFromSeverity((Severity) obj);
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
-
+    public static Severity get(String value) throws ReportException {
+        Severity severity = SeverityLookup.lookup.get(value);
+        if (severity == null) {
+            throw new ReportException("Cannnot find serverity for key " + value);
+        }
+        return severity;
+    }
 }

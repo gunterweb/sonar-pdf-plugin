@@ -19,42 +19,50 @@
  */
 package org.sonarqube.ws.model;
 
+/**
+ * TextRange model
+ *
+ */
 public class TextRange implements Model {
-	private Integer startLine;
-	private Integer endLine;
-	private Integer startOffset;
-	private Integer endOffset;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4316845000122154587L;
+    private Integer startLine;
+    private Integer endLine;
+    private Integer startOffset;
+    private Integer endOffset;
 
-	public Integer getStartLine() {
-		return startLine;
-	}
+    public Integer getStartLine() {
+        return startLine;
+    }
 
-	public void setStartLine(Integer startLine) {
-		this.startLine = startLine;
-	}
+    public void setStartLine(Integer startLine) {
+        this.startLine = startLine;
+    }
 
-	public Integer getEndLine() {
-		return endLine;
-	}
+    public Integer getEndLine() {
+        return endLine;
+    }
 
-	public void setEndLine(Integer endLine) {
-		this.endLine = endLine;
-	}
+    public void setEndLine(Integer endLine) {
+        this.endLine = endLine;
+    }
 
-	public Integer getStartOffset() {
-		return startOffset;
-	}
+    public Integer getStartOffset() {
+        return startOffset;
+    }
 
-	public void setStartOffset(Integer startOffset) {
-		this.startOffset = startOffset;
-	}
+    public void setStartOffset(Integer startOffset) {
+        this.startOffset = startOffset;
+    }
 
-	public Integer getEndOffset() {
-		return endOffset;
-	}
+    public Integer getEndOffset() {
+        return endOffset;
+    }
 
-	public void setEndOffset(Integer endOffset) {
-		this.endOffset = endOffset;
-	}
+    public void setEndOffset(Integer endOffset) {
+        this.endOffset = endOffset;
+    }
 
 }

@@ -28,44 +28,60 @@ import org.sonar.report.pdf.entity.ComplexityDistribution;
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Image;
 
+/**
+ * Builder for complexity distribution
+ *
+ */
 public class ComplexityDistributionBuilder extends AbstractBuilder {
 
-	private static final String CHART_END_PATH = "&chorgv=y&chcaaml=0.05&chseamu=0.2&chins=5&chcaamu=0.05&chcav=y&chc=777777,777777,777777,777777,777777,777777,777777";
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -9157374883309511241L;
 
-	private static final String CHART_Y_PATH = "&chov=y&chrav=y&chv=";
+    private static final String CHART_END_PATH = "&chorgv=y&chcaaml=0.05&chseamu=0.2&chins=5&chcaamu=0.05&chcav=y&chc=777777,777777,777777,777777,777777,777777,777777";
 
-	private static final String CHART_START_PATH = "/chart?cht=cvb&chdi=300x200&chca=";
+    private static final String CHART_Y_PATH = "&chov=y&chrav=y&chv=";
 
-	private static final Logger LOG = LoggerFactory.getLogger(ComplexityDistributionBuilder.class);
+    private static final String CHART_START_PATH = "/chart?cht=cvb&chdi=300x200&chca=";
 
-	private static ComplexityDistributionBuilder builder;
+    private static final Logger LOG = LoggerFactory.getLogger(ComplexityDistributionBuilder.class);
 
-	private String sonarBaseUrl;
+    private static ComplexityDistributionBuilder builder;
 
-	private ComplexityDistributionBuilder(final String sonarBaseUrl) {
-		this.sonarBaseUrl = sonarBaseUrl;
-	}
+    private String sonarBaseUrl;
 
-	public static ComplexityDistributionBuilder getInstance(final String sonarBaseUrl) {
-		if (builder == null) {
-			return new ComplexityDistributionBuilder(sonarBaseUrl);
-		}
+    private ComplexityDistributionBuilder(final String sonarBaseUrl) {
+        this.sonarBaseUrl = sonarBaseUrl;
+    }
 
-		return builder;
-	}
+    public static ComplexityDistributionBuilder getInstance(final String sonarBaseUrl) {
+        if (builder == null) {
+            builder = new ComplexityDistributionBuilder(sonarBaseUrl);
+        }
 
-	public Image getGraphic(final ComplexityDistribution complexityDistribution) {
-		Image image = null;
-		try {
-			if (complexityDistribution.getyValues().length != 0) {
-				image = Image.getInstance(sonarBaseUrl + CHART_START_PATH + complexityDistribution.formatXValues()
-						+ CHART_Y_PATH + complexityDistribution.formatYValues() + CHART_END_PATH);
-				image.setAlignment(Image.ALIGN_MIDDLE);
-			}
-		} catch (BadElementException | IOException e) {
-			LOG.error("Can not generate complexity distribution image", e);
-		}
-		return image;
-	}
+        return builder;
+    }
+
+    /**
+     * Creates a image for ComplexityDistribution
+     * 
+     * @param complexityDistribution
+     *            complexity representation
+     * @return Image
+     */
+    public Image getGraphic(final ComplexityDistribution complexityDistribution) {
+        Image image = null;
+        try {
+            if (complexityDistribution.getyValues().length != 0) {
+                image = Image.getInstance(sonarBaseUrl + CHART_START_PATH + complexityDistribution.formatXValues()
+                        + CHART_Y_PATH + complexityDistribution.formatYValues() + CHART_END_PATH);
+                image.setAlignment(Image.ALIGN_MIDDLE);
+            }
+        } catch (BadElementException | IOException e) {
+            LOG.error("Can not generate complexity distribution image", e);
+        }
+        return image;
+    }
 
 }

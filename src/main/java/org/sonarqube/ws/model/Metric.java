@@ -22,119 +22,127 @@ package org.sonarqube.ws.model;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 
+/**
+ * Metric model
+ *
+ */
 public class Metric implements Model {
 
-	private Integer id;
-	private String key;
-	private String type;
-	private String name;
-	private String description;
-	private String domain;
-	private Integer direction;
-	private Boolean qualitative;
-	private Boolean hidden;
-	private Boolean custom;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6804788216865973063L;
+    private Integer id;
+    private String key;
+    private String type;
+    private String name;
+    private String description;
+    private String domain;
+    private Integer direction;
+    private Boolean qualitative;
+    private Boolean hidden;
+    private Boolean custom;
 
-	@CheckForNull
-	public Integer getId() {
-		return id;
-	}
+    @CheckForNull
+    public Integer getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Boolean getQualitative() {
-		return qualitative;
-	}
+    public Boolean getQualitative() {
+        return qualitative;
+    }
 
-	public void setQualitative(Boolean qualitative) {
-		this.qualitative = qualitative;
-	}
+    public void setQualitative(Boolean qualitative) {
+        this.qualitative = qualitative;
+    }
 
-	@CheckForNull
-	public String getKey() {
-		return key;
-	}
+    @CheckForNull
+    public String getKey() {
+        return key;
+    }
 
-	public Metric setKey(@Nullable String key) {
-		this.key = key;
-		return this;
-	}
+    public Metric setKey(@Nullable String key) {
+        this.key = key;
+        return this;
+    }
 
-	@CheckForNull
-	public String getName() {
-		return name;
-	}
+    @CheckForNull
+    public String getName() {
+        return name;
+    }
 
-	public Metric setName(@Nullable String name) {
-		this.name = name;
-		return this;
-	}
+    public Metric setName(@Nullable String name) {
+        this.name = name;
+        return this;
+    }
 
-	@CheckForNull
-	public Integer getDirection() {
-		return direction;
-	}
+    @CheckForNull
+    public Integer getDirection() {
+        return direction;
+    }
 
-	public Metric setDirection(@Nullable Integer direction) {
-		this.direction = direction;
-		return this;
-	}
+    public Metric setDirection(@Nullable Integer direction) {
+        this.direction = direction;
+        return this;
+    }
 
-	@CheckForNull
-	public String getDomain() {
-		return domain;
-	}
+    @CheckForNull
+    public String getDomain() {
+        return domain;
+    }
 
-	public Metric setDomain(@Nullable String domain) {
-		this.domain = domain;
-		return this;
-	}
+    public Metric setDomain(@Nullable String domain) {
+        this.domain = domain;
+        return this;
+    }
 
-	@CheckForNull
-	public String getDescription() {
-		return description;
-	}
+    @CheckForNull
+    public String getDescription() {
+        return description;
+    }
 
-	public Metric setDescription(@Nullable String description) {
-		this.description = description;
-		return this;
-	}
+    public Metric setDescription(@Nullable String description) {
+        this.description = description;
+        return this;
+    }
 
-	@CheckForNull
-	public String getType() {
-		return type;
-	}
+    @CheckForNull
+    public String getType() {
+        return type;
+    }
 
-	public Metric setType(@Nullable String type) {
-		this.type = type;
-		return this;
-	}
+    public Metric setType(@Nullable String type) {
+        this.type = type;
+        return this;
+    }
 
-	@CheckForNull
-	public Boolean getHidden() {
-		return hidden;
-	}
+    @CheckForNull
+    public Boolean getHidden() {
+        return hidden;
+    }
 
-	public Metric setHidden(@Nullable Boolean hidden) {
-		this.hidden = hidden;
-		return this;
-	}
+    public Metric setHidden(@Nullable Boolean hidden) {
+        this.hidden = hidden;
+        return this;
+    }
 
-	@CheckForNull
-	public Boolean getCustom() {
-		return custom;
-	}
+    @CheckForNull
+    public Boolean getCustom() {
+        return custom;
+    }
 
-	public Metric setCustom(@Nullable Boolean custom) {
-		this.custom = custom;
-		return this;
-	}
+    public Metric setCustom(@Nullable Boolean custom) {
+        this.custom = custom;
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return new StringBuilder().append(name).append("(").append(key).append(")").toString();
-	}
+    @Override
+    public String toString() {
+        return new StringBuilder().append(name).append("(").append(key).append(")").toString();
+    }
 
 }

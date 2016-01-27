@@ -19,91 +19,97 @@
  */
 package org.sonar.report.pdf.entity;
 
-public class FileInfo {
+/**
+ * Bean for file information
+ *
+ */
+public class FileInfo implements Entity {
 
-	/**
-	 * Sonar resource key.
-	 */
-	private String key;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4793538491240285526L;
 
-	/**
-	 * Resource name (filename).
-	 */
-	private String name;
+    /**
+     * Sonar resource key.
+     */
+    private String key;
 
-	/**
-	 * Number of violations ins this resource (file).
-	 */
-	private String violations;
+    /**
+     * Resource name (filename).
+     */
+    private String name;
 
-	/**
-	 * Class complexity.
-	 */
-	private String complexity;
+    /**
+     * Number of violations ins this resource (file).
+     */
+    private String violations;
 
-	/**
-	 * Duplicated lines in this resource (file)
-	 */
-	private String duplicatedLines;
+    /**
+     * Class complexity.
+     */
+    private String complexity;
 
-	/**
-	 * It defines the content of this object: used for violations info,
-	 * complexity info or duplications info.
-	 */
-	public static final int VIOLATIONS_CONTENT = 1;
-	public static final int CCN_CONTENT = 2;
-	public static final int DUPLICATIONS_CONTENT = 3;
+    /**
+     * Duplicated lines in this resource (file)
+     */
+    private String duplicatedLines;
 
-	public boolean isContentSet(final int content) {
-		boolean result = false;
-		if (content == VIOLATIONS_CONTENT) {
-			result = !("0").equals(this.getViolations());
-		} else if (content == CCN_CONTENT) {
-			result = !("0").equals(this.getComplexity());
-		} else if (content == DUPLICATIONS_CONTENT) {
-			result = !("0").equals(this.getDuplicatedLines());
-		}
-		return result;
-	}
+    /**
+     * It defines the content of this object: used for violations info,
+     * complexity info or duplications info.
+     */
 
-	public String getKey() {
-		return key;
-	}
+    public boolean isContentSet(final FileInfoTypes content) {
+        boolean result = false;
+        if (content == FileInfoTypes.VIOLATIONS_CONTENT) {
+            result = !("0").equals(this.getViolations());
+        } else if (content == FileInfoTypes.CCN_CONTENT) {
+            result = !("0").equals(this.getComplexity());
+        } else if (content == FileInfoTypes.DUPLICATIONS_CONTENT) {
+            result = !("0").equals(this.getDuplicatedLines());
+        }
+        return result;
+    }
 
-	public String getViolations() {
-		return violations;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public String getComplexity() {
-		return complexity;
-	}
+    public String getViolations() {
+        return violations;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getComplexity() {
+        return complexity;
+    }
 
-	public void setKey(final String key) {
-		this.key = key;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setViolations(final String violations) {
-		this.violations = violations;
-	}
+    public void setKey(final String key) {
+        this.key = key;
+    }
 
-	public void setComplexity(final String complexity) {
-		this.complexity = complexity;
-	}
+    public void setViolations(final String violations) {
+        this.violations = violations;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public void setComplexity(final String complexity) {
+        this.complexity = complexity;
+    }
 
-	public String getDuplicatedLines() {
-		return duplicatedLines;
-	}
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	public void setDuplicatedLines(final String duplicatedLines) {
-		this.duplicatedLines = duplicatedLines;
-	}
+    public String getDuplicatedLines() {
+        return duplicatedLines;
+    }
+
+    public void setDuplicatedLines(final String duplicatedLines) {
+        this.duplicatedLines = duplicatedLines;
+    }
 
 }

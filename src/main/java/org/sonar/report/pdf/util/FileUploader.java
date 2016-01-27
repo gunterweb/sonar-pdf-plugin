@@ -34,42 +34,46 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.report.pdf.batch.PDFPostJob;
 
+/**
+ * File uploader for the report
+ *
+ */
 public class FileUploader {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PDFPostJob.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PDFPostJob.class);
 
-	private FileUploader() {
-		super();
-	}
+    private FileUploader() {
+        super();
+    }
 
-	public static void upload(final File file, final String url, String username, String password) {
-		PostMethod filePost = new PostMethod(url);
+    public static void upload(final File file, final String url, String username, String password) {
+        PostMethod filePost = new PostMethod(url);
 
-		try {
-			LOG.info("Uploading PDF to server...");
+        try {
+            LOG.info("Uploading PDF to server...");
 
-			Part[] parts = { new FilePart("upload", file) };
+            Part[] parts = { new FilePart("upload", file) };
 
-			filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
+            filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
 
-			HttpClient client = new HttpClient();
-			if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
-				client.getParams().setAuthenticationPreemptive(true);
-				Credentials credentials = new UsernamePasswordCredentials(username, password);
-				client.getState().setCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT), credentials);
-			}
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
-			int status = client.executeMethod(filePost);
-			if (status == HttpStatus.SC_OK) {
-				LOG.info("PDF uploaded.");
-			} else {
-				LOG.error("Something went wrong storing the PDF at server side. Status: " + status);
-			}
-		} catch (Exception e) {
-			LOG.error("Something went wrong storing the PDF at server side", e);
-		} finally {
-			filePost.releaseConnection();
-		}
-	}
+            HttpClient client = new HttpClient();
+            if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
+                client.getParams().setAuthenticationPreemptive(true);
+                Credentials credentials = new UsernamePasswordCredentials(username, password);
+                client.getState().setCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT), credentials);
+            }
+            client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
+            int status = client.executeMethod(filePost);
+            if (status == HttpStatus.SC_OK) {
+                LOG.info("PDF uploaded.");
+            } else {
+                LOG.error("Something went wrong storing the PDF at server side. Status: " + status);
+            }
+        } catch (Exception e) {
+            LOG.error("Something went wrong storing the PDF at server side", e);
+        } finally {
+            filePost.releaseConnection();
+        }
+    }
 
 }

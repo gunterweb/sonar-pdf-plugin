@@ -17,38 +17,57 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.report.pdf.util;
+package org.sonarqube.ws.client;
 
 import java.io.Serializable;
 
 /**
- * Credentials.
+ * Bean defining the Sonar Host
+ *
  */
-public class Credentials implements Serializable {
-
+public class SonarHost implements Serializable {
     /**
      * 
      */
-    private static final long serialVersionUID = -5296494389795631217L;
-    private String url = null;
-    private String username = null;
-    private String password = null;
+    private static final long serialVersionUID = 7479172149694486308L;
+    private String host;
+    private String username;
+    private String password;
 
-    public Credentials(final String url, final String username, final String password) {
-        this.url = url;
+    public SonarHost(String host) {
+        this.host = host;
+    }
+
+    public SonarHost(String host, String username, String password) {
+        this(host);
         this.username = username;
         this.password = password;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public SonarHost setHost(String host) {
+        this.host = host;
+        return this;
     }
 
     public String getUsername() {
         return username;
     }
 
+    public SonarHost setUsername(String username) {
+        this.username = username;
+        return this;
+    }
+
     public String getPassword() {
         return password;
     }
 
-    public String getUrl() {
-        return url;
+    public SonarHost setPassword(String password) {
+        this.password = password;
+        return this;
     }
 }

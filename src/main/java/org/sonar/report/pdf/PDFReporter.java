@@ -21,12 +21,12 @@ package org.sonar.report.pdf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.utils.HttpDownloader.HttpException;
 import org.sonar.report.pdf.builder.ComplexityDistributionBuilder;
 import org.sonar.report.pdf.builder.ProjectBuilder;
 import org.sonar.report.pdf.entity.ComplexityDistribution;
@@ -53,162 +53,271 @@ import com.lowagie.text.pdf.PdfWriter;
  * used in yhe PDF document), the project key and the implementation of
  * printPdfBody method.
  */
-public abstract class PDFReporter implements PDFResources {
+public abstract class PDFReporter implements Serializable {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PDFReporter.class);
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -923944005149556486L;
 
-	private Credentials credentials;
+    private static final Logger LOG = LoggerFactory.getLogger(PDFReporter.class);
 
-	private Project project = null;
+    private Credentials credentials;
 
-	public PDFReporter(final Credentials credentials) {
-		this.credentials = credentials;
-	}
+    private Project project = null;
 
-	public ByteArrayOutputStream getReport() throws DocumentException, IOException, ReportException {
-		// Creation of documents
-		Document mainDocument = new Document(PageSize.A4, 50, 50, 110, 50);
-		Toc tocDocument = new Toc();
-		Document frontPageDocument = new Document(PageSize.A4, 50, 50, 110, 50);
-		ByteArrayOutputStream mainDocumentBaos = new ByteArrayOutputStream();
-		ByteArrayOutputStream frontPageDocumentBaos = new ByteArrayOutputStream();
-		PdfWriter mainDocumentWriter = PdfWriter.getInstance(mainDocument, mainDocumentBaos);
-		PdfWriter frontPageDocumentWriter = PdfWriter.getInstance(frontPageDocument, frontPageDocumentBaos);
+    public PDFReporter(final Credentials credentials) {
+        this.credentials = credentials;
+    }
 
-		// Events for TOC, header and pages numbers
-		Events events = new Events(tocDocument, new Header(this.getLogo(), this.getProject()));
-		mainDocumentWriter.setPageEvent(events);
+    /**
+     * Get Report
+     * 
+     * @return ByteArrayOutputStream
+     * @throws ReportException
+     *             ReportException
+     */
+    public ByteArrayOutputStream getReport() throws ReportException {
+        // Creation of documents
+        Document mainDocument = new Document(PageSize.A4, 50, 50, 110, 50);
+        Toc tocDocument = new Toc();
+        Document frontPageDocument = new Document(PageSize.A4, 50, 50, 110, 50);
+        ByteArrayOutputStream mainDocumentBaos = new ByteArrayOutputStream();
+        ByteArrayOutputStream frontPageDocumentBaos = new ByteArrayOutputStream();
+        PdfWriter mainDocumentWriter = null;
+        PdfWriter frontPageDocumentWriter = null;
+        try {
+            mainDocumentWriter = PdfWriter.getInstance(mainDocument, mainDocumentBaos);
+            frontPageDocumentWriter = PdfWriter.getInstance(frontPageDocument, frontPageDocumentBaos);
+        } catch (DocumentException e) {
+            throw new ReportException("Error instantiating PDFWriters", e);
+        }
 
-		mainDocument.open();
-		tocDocument.getTocDocument().open();
-		frontPageDocument.open();
+        // Events for TOC, header and pages numbers
+        Events events = new Events(tocDocument, new Header(this.getLogo(), this.getProject()));
+        mainDocumentWriter.setPageEvent(events);
 
-		LOG.info("Generating PDF report...");
-		printFrontPage(frontPageDocument, frontPageDocumentWriter);
-		printTocTitle(tocDocument);
-		printPdfBody(mainDocument);
-		mainDocument.close();
-		tocDocument.getTocDocument().close();
-		frontPageDocument.close();
+        mainDocument.open();
+        tocDocument.getTocDocument().open();
+        frontPageDocument.open();
 
-		// Get Readers
-		PdfReader mainDocumentReader = new PdfReader(mainDocumentBaos.toByteArray());
-		PdfReader tocDocumentReader = new PdfReader(tocDocument.getTocOutputStream().toByteArray());
-		PdfReader frontPageDocumentReader = new PdfReader(frontPageDocumentBaos.toByteArray());
+        LOG.info("Generating PDF report...");
+        printFrontPage(frontPageDocument, frontPageDocumentWriter);
+        printTocTitle(tocDocument);
+        printPdfBody(mainDocument);
+        mainDocument.close();
+        tocDocument.getTocDocument().close();
+        frontPageDocument.close();
 
-		// New document
-		Document documentWithToc = new Document(tocDocumentReader.getPageSizeWithRotation(1));
-		ByteArrayOutputStream finalBaos = new ByteArrayOutputStream();
-		PdfCopy copy = new PdfCopy(documentWithToc, finalBaos);
+        // Return the final document (with TOC)
+        return createFinalReport(tocDocument, mainDocumentBaos, frontPageDocumentBaos);
+    }
 
-		documentWithToc.open();
-		copy.addPage(copy.getImportedPage(frontPageDocumentReader, 1));
-		for (int i = 1; i <= tocDocumentReader.getNumberOfPages(); i++) {
-			copy.addPage(copy.getImportedPage(tocDocumentReader, i));
-		}
-		for (int i = 1; i <= mainDocumentReader.getNumberOfPages(); i++) {
-			copy.addPage(copy.getImportedPage(mainDocumentReader, i));
-		}
-		documentWithToc.close();
+    /**
+     * Create final report
+     * 
+     * @param tocDocument
+     *            TOC
+     * @param mainDocumentBaos
+     *            main document
+     * @param frontPageDocumentBaos
+     *            front page
+     * @return ByteArrayOutputStream
+     * @throws ReportException
+     *             ReportException
+     */
+    private ByteArrayOutputStream createFinalReport(Toc tocDocument, ByteArrayOutputStream mainDocumentBaos,
+            ByteArrayOutputStream frontPageDocumentBaos) throws ReportException {
+        ByteArrayOutputStream finalBaos = new ByteArrayOutputStream();
+        try {
+            // Get Readers
+            PdfReader mainDocumentReader = new PdfReader(mainDocumentBaos.toByteArray());
+            PdfReader tocDocumentReader = new PdfReader(tocDocument.getTocOutputStream().toByteArray());
+            PdfReader frontPageDocumentReader = new PdfReader(frontPageDocumentBaos.toByteArray());
 
-		// Return the final document (with TOC)
-		return finalBaos;
-	}
+            // New document
+            Document documentWithToc = new Document(tocDocumentReader.getPageSizeWithRotation(1));
+            PdfCopy copy = new PdfCopy(documentWithToc, finalBaos);
+            documentWithToc.open();
+            copy.addPage(copy.getImportedPage(frontPageDocumentReader, 1));
+            for (int i = 1; i <= tocDocumentReader.getNumberOfPages(); i++) {
+                copy.addPage(copy.getImportedPage(tocDocumentReader, i));
+            }
+            for (int i = 1; i <= mainDocumentReader.getNumberOfPages(); i++) {
+                copy.addPage(copy.getImportedPage(mainDocumentReader, i));
+            }
+            documentWithToc.close();
+        } catch (IOException | DocumentException e) {
+            throw new ReportException("Error creating final report", e);
+        }
+        return finalBaos;
+    }
 
-	public Project getProject() throws HttpException, IOException, ReportException {
-		if (project == null) {
-			WSClient sonar = WSClient.create(credentials.getUrl(), credentials.getUsername(),
-					credentials.getPassword());
-			ProjectBuilder projectBuilder = ProjectBuilder.getInstance(sonar);
-			project = projectBuilder.initializeProject(getProjectKey());
-		}
-		return project;
-	}
+    /**
+     * Gets current project
+     * 
+     * @return Project
+     * @throws ReportException
+     *             ReportException
+     */
+    public Project getProject() throws ReportException {
+        if (project == null) {
+            WSClient sonar = WSClient.create(credentials.getUrl(), credentials.getUsername(),
+                    credentials.getPassword());
+            ProjectBuilder projectBuilder = ProjectBuilder.getInstance(sonar);
+            project = projectBuilder.initializeProject(getProjectKey());
+        }
+        return project;
+    }
 
-	public Image getCCNDistribution(final Project project) {
-		String data;
-		if (project.getMeasure(MetricKeys.FILE_COMPLEXITY_DISTRIBUTION).getDataValue() != null) {
-			data = project.getMeasure(MetricKeys.FILE_COMPLEXITY_DISTRIBUTION).getDataValue();
-		} else {
-			return null;
-		}
-		ComplexityDistributionBuilder complexityDistributionBuilder = ComplexityDistributionBuilder
-				.getInstance(credentials.getUrl());
-		ComplexityDistribution ccnDist = new ComplexityDistribution(data);
-		return complexityDistributionBuilder.getGraphic(ccnDist);
-	}
+    /**
+     * Gets complexity distribution
+     * 
+     * @param project
+     *            project
+     * @return Image
+     */
+    protected Image getCCNDistribution(final Project project) {
+        String data;
+        if (project.getMeasure(MetricKeys.FILE_COMPLEXITY_DISTRIBUTION).getDataValue() != null) {
+            data = project.getMeasure(MetricKeys.FILE_COMPLEXITY_DISTRIBUTION).getDataValue();
+        } else {
+            return null;
+        }
+        ComplexityDistributionBuilder complexityDistributionBuilder = ComplexityDistributionBuilder
+                .getInstance(credentials.getUrl());
+        ComplexityDistribution ccnDist = new ComplexityDistribution(data);
+        return complexityDistributionBuilder.getGraphic(ccnDist);
+    }
 
-	public String getTextProperty(final String key) {
-		return getLangProperties().getProperty(key);
-	}
+    public String getTextProperty(final String key) {
+        return getLangProperties().getProperty(key);
+    }
 
-	public String getConfigProperty(final String key) {
-		return getReportProperties().getProperty(key);
-	}
+    public String getConfigProperty(final String key) {
+        return getReportProperties().getProperty(key);
+    }
 
-	public Image getTendencyImage(final int tendencyQualitative, final int tendencyCuantitative) {
-		// tendency parameters are t_qual and t_quant tags returned by
-		// webservices api
-		String iconName;
-		if (tendencyQualitative == 0) {
-			switch (tendencyCuantitative) {
-			case -2:
-				iconName = "-2-black.png";
-				break;
-			case -1:
-				iconName = "-1-black.png";
-				break;
-			case 1:
-				iconName = "1-black.png";
-				break;
-			case 2:
-				iconName = "2-black.png";
-				break;
-			default:
-				iconName = "none.png";
-			}
-		} else {
-			switch (tendencyQualitative) {
-			case -2:
-				iconName = "-2-red.png";
-				break;
-			case -1:
-				iconName = "-1-red.png";
-				break;
-			case 1:
-				iconName = "1-green.png";
-				break;
-			case 2:
-				iconName = "2-green.png";
-				break;
-			default:
-				iconName = "none.png";
-			}
-		}
-		Image tendencyImage = null;
-		try {
-			tendencyImage = Image.getInstance(this.getClass().getResource(TENDENCY_DIR + iconName));
-		} catch (BadElementException | IOException e) {
-			LOG.error("Can not generate tendency image", e);
-		}
-		return tendencyImage;
-	}
+    /**
+     * Gets image from tendency
+     * 
+     * @param tendencyQualitative
+     *            qualitative tendency
+     * @param tendencyQuantitative
+     *            quantitative tendency
+     * @return Image
+     */
+    protected Image getTendencyImage(final int trend, boolean okWhenGrows) {
+        // tendency parameters are t_qual and t_quant tags returned by
+        // webservices api
+        String iconName;
+        if (okWhenGrows) {
+            iconName = defineIconForIncreasingAwaitedTendency(trend);
+        } else {
+            iconName = defineIconForDecreasingAwaitedTendency(trend);
+        }
+        Image tendencyImage = null;
+        try {
+            tendencyImage = Image.getInstance(this.getClass().getResource(PDFResources.TENDENCY_DIR + iconName));
+        } catch (BadElementException | IOException e) {
+            LOG.error("Can not generate tendency image", e);
+        }
+        return tendencyImage;
+    }
 
-	protected abstract void printPdfBody(Document document) throws DocumentException, IOException, ReportException;
+    private String defineIconForIncreasingAwaitedTendency(final int trend) {
+        String iconName;
+        switch (trend) {
+        case -1:
+            iconName = "-1-red.png";
+            break;
+        case 1:
+            iconName = "1-green.png";
+            break;
+        default:
+            iconName = "none.png";
+        }
+        return iconName;
+    }
 
-	protected abstract void printTocTitle(Toc tocDocument) throws DocumentException, IOException;
+    private String defineIconForDecreasingAwaitedTendency(final int trend) {
+        String iconName;
+        switch (trend) {
+        case -1:
+            iconName = "-1-green.png";
+            break;
+        case 1:
+            iconName = "1-red.png";
+            break;
+        default:
+            iconName = "none.png";
+        }
+        return iconName;
+    }
 
-	protected abstract URL getLogo();
+    /**
+     * Print PDF body
+     * 
+     * @param document
+     *            document
+     * @throws ReportException
+     *             ReportException
+     */
+    protected abstract void printPdfBody(Document document) throws ReportException;
 
-	protected abstract String getProjectKey();
+    /**
+     * Pring TOC
+     * 
+     * @param document
+     *            document
+     * @throws ReportException
+     *             ReportException
+     */
+    protected abstract void printTocTitle(Toc document) throws ReportException;
 
-	protected abstract void printFrontPage(Document frontPageDocument, PdfWriter frontPageWriter)
-			throws ReportException;
+    /**
+     * Get Logo
+     * 
+     * @return URL
+     * @throws ReportException
+     *             ReportException
+     */
+    protected abstract URL getLogo();
 
-	protected abstract Properties getReportProperties();
+    /**
+     * Get project key
+     * 
+     * @return String
+     */
+    protected abstract String getProjectKey();
 
-	protected abstract Properties getLangProperties();
+    /**
+     * Pring front page
+     * 
+     * @param frontPageDocument
+     *            front page document
+     * @param frontPageWriter
+     *            front page writer
+     * @throws ReportException
+     *             ReportException
+     */
+    protected abstract void printFrontPage(Document frontPageDocument, PdfWriter frontPageWriter)
+            throws ReportException;
 
-	public abstract String getReportType();
+    /**
+     * Get report properties
+     * 
+     * @return Properties
+     */
+    protected abstract Properties getReportProperties();
+
+    /**
+     * Get lang properties
+     * 
+     * @return Properties
+     */
+    protected abstract Properties getLangProperties();
+
+    public abstract String getReportType();
 
 }

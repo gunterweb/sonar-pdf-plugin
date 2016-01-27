@@ -19,90 +19,88 @@
  */
 package org.sonar.report.pdf.entity;
 
-public class Measure {
+/**
+ * Bean defining measure
+ *
+ */
+public class Measure implements Entity {
 
-	private String key;
-	private String value;
-	private String formatValue;
-	private String textValue;
-	private String dataValue;
-	private Integer qualitativeTendency;
-	private Integer quantitativeTendency;
-	private String alert;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1506882233935063179L;
+    private String key;
+    private String value;
+    private String formatValue;
+    private String textValue;
+    private String dataValue;
+    private Integer qualitativeTendency;
+    private String alert;
 
-	public Measure(final String measureKey, final String measureFValue) {
-		this.key = measureKey;
-		this.formatValue = measureFValue;
-		this.qualitativeTendency = 0;
-		this.quantitativeTendency = 0;
-	}
+    public Measure(final String measureKey, final String measureFValue) {
+        this.key = measureKey;
+        this.formatValue = measureFValue;
+        this.qualitativeTendency = 0;
+    }
 
-	public Measure() {
-		super();
-	}
+    public Measure() {
+        super();
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public void setKey(final String key) {
-		this.key = key;
-	}
+    public void setKey(final String key) {
+        this.key = key;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setValue(final String value) {
-		this.value = value;
-	}
+    public void setValue(final String value) {
+        this.value = value;
+    }
 
-	public String getFormatValue() {
-		return formatValue;
-	}
+    public String getFormatValue() {
+        return formatValue;
+    }
 
-	public void setFormatValue(final String formatValue) {
-		this.formatValue = formatValue;
-	}
+    public void setFormatValue(final String formatValue) {
+        this.formatValue = formatValue;
+    }
 
-	public String getTextValue() {
-		return textValue;
-	}
+    public String getTextValue() {
+        return textValue;
+    }
 
-	public void setTextValue(final String textValue) {
-		this.textValue = textValue;
-	}
+    public void setTextValue(final String textValue) {
+        this.textValue = textValue;
+    }
 
-	public String getDataValue() {
-		return dataValue;
-	}
+    public String getDataValue() {
+        return dataValue;
+    }
 
-	public void setDataValue(final String dataValue) {
-		this.dataValue = dataValue;
-	}
+    public void setDataValue(final String dataValue) {
+        this.dataValue = dataValue;
+    }
 
-	public Integer getQualitativeTendency() {
-		return qualitativeTendency;
-	}
+    public Integer getQualitativeTendency() {
+        return qualitativeTendency;
+    }
 
-	public void setQualitativeTendency(final Integer qualitativeTendency) {
-		this.qualitativeTendency = qualitativeTendency;
-	}
+    public void setQualitativeTendency(final Integer qualitativeTendency) {
+        this.qualitativeTendency = qualitativeTendency;
+    }
 
-	public Integer getQuantitativeTendency() {
-		return quantitativeTendency;
-	}
+    public String getAlert() {
+        return alert;
+    }
 
-	public void setQuantitativeTendency(final Integer quantitativeTendency) {
-		this.quantitativeTendency = quantitativeTendency;
-	}
-
-	public String getAlert() {
-		return alert;
-	}
-
-	public void setAlert(final String alert) {
-		this.alert = alert;
-	}
+    public void setAlert(final String alert) {
+        this.alert = alert;
+    }
 
 }

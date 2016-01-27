@@ -17,60 +17,29 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonarqube.ws.model;
+package org.sonarqube.ws.client;
 
 /**
- * Rule model
+ * Webservice connection error
  *
  */
-public class Rule implements Model {
+public class ConnectionException extends Exception {
+
     /**
      * 
      */
-    private static final long serialVersionUID = 7874511314888199627L;
-    String key;
-    String name;
-    String status;
-    String lang;
-    String langName;
+    private static final long serialVersionUID = 5273437802346910542L;
 
-    public String getKey() {
-        return key;
+    public ConnectionException(final String msg) {
+        super(msg);
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public ConnectionException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public String getName() {
-        return name;
+    public ConnectionException(Throwable cause) {
+        super(cause);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
-    public String getLangName() {
-        return langName;
-    }
-
-    public void setLangName(String langName) {
-        this.langName = langName;
-    }
 }

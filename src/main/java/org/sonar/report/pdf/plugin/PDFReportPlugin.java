@@ -28,17 +28,25 @@ import org.sonar.api.PropertyType;
 import org.sonar.api.SonarPlugin;
 import org.sonar.report.pdf.batch.PDFPostJob;
 
+/**
+ * Report Plugin main class
+ *
+ */
 @Properties({
-		@Property(key = PDFPostJob.SKIP_PDF_KEY, name = "Skip", description = "Skip generation of PDF report.", defaultValue = ""
-				+ PDFPostJob.SKIP_PDF_DEFAULT_VALUE, global = true, project = true, module = false, type = PropertyType.BOOLEAN),
-		@Property(key = PDFPostJob.REPORT_TYPE, name = "Type", description = "Report type.", defaultValue = PDFPostJob.REPORT_TYPE_DEFAULT_VALUE, global = true, project = true, module = false, type = PropertyType.SINGLE_SELECT_LIST, options = {
-				"executive", "workbook" }),
-		@Property(key = PDFPostJob.USERNAME, name = "Username", description = "Username for WS API access.", defaultValue = PDFPostJob.USERNAME_DEFAULT_VALUE, global = true, project = true, module = false),
-		@Property(key = PDFPostJob.PASSWORD, name = "Password", description = "Password for WS API access.", defaultValue = PDFPostJob.PASSWORD_DEFAULT_VALUE, global = true, project = true, module = false, type = PropertyType.PASSWORD) })
+        @Property(key = PDFPostJob.SKIP_PDF_KEY, name = "Skip", description = "Skip generation of PDF report.", defaultValue = ""
+                + PDFPostJob.SKIP_PDF_DEFAULT_VALUE, global = true, project = true, module = false, type = PropertyType.BOOLEAN),
+        @Property(key = PDFPostJob.REPORT_TYPE, name = "Type", description = "Report type.", defaultValue = PDFPostJob.REPORT_TYPE_DEFAULT_VALUE, global = true, project = true, module = false, type = PropertyType.SINGLE_SELECT_LIST, options = {
+                "executive", "workbook" }),
+        @Property(key = PDFPostJob.USERNAME, name = "Username", description = "Username for WS API access.", defaultValue = PDFPostJob.USERNAME_DEFAULT_VALUE, global = true, project = true, module = false),
+        @Property(key = PDFPostJob.SONAR_P_KEY, name = "Password", description = "Password for WS API access.", defaultValue = PDFPostJob.SONAR_P_DEFAULT_VALUE, global = true, project = true, module = false, type = PropertyType.PASSWORD) })
 public class PDFReportPlugin extends SonarPlugin {
 
-	@Override
-	public List getExtensions() {
-		return Arrays.asList(new Class[] { PDFPostJob.class, PdfReportWidget.class });
-	}
+    /**
+     * @see org.sonar.api.SonarPlugin#getExtensions()
+     */
+    @SuppressWarnings("rawtypes")
+    @Override
+    public List<Class> getExtensions() {
+        return Arrays.asList(new Class[] { PDFPostJob.class, PdfReportWidget.class });
+    }
 }

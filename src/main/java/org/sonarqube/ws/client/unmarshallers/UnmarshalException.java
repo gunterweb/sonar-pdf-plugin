@@ -19,19 +19,24 @@
  */
 package org.sonarqube.ws.client.unmarshallers;
 
+import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonarqube.ws.client.services.AbstractQuery;
 
-public final class UnmarshalException extends RuntimeException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5655839036051517531L;
+/**
+ * Unmarshalling exception
+ *
+ */
+public final class UnmarshalException extends ReportException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5655839036051517531L;
 
-	public UnmarshalException(String s) {
-		super(s);
-	}
+    public UnmarshalException(String s) {
+        super(s);
+    }
 
-	public UnmarshalException(AbstractQuery<?> query, String json, Throwable t) {
-		super("Can not parse the response of query " + query.getUrl() + ": " + json, t);
-	}
+    public UnmarshalException(AbstractQuery<?> query, String json, Throwable t) {
+        super("Can not parse the response of query " + query.getUrl() + ": " + json, t);
+    }
 }

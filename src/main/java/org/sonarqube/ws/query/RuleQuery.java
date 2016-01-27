@@ -19,41 +19,55 @@
  */
 package org.sonarqube.ws.query;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.sonarqube.ws.client.services.Query;
 import org.sonarqube.ws.model.Rules;
 
+/**
+ * Query for rules
+ *
+ */
 public class RuleQuery extends Query<Rules> {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4258948396167860321L;
+    private final Map<String, Serializable> params = new HashMap<>();
+    public static final String BASE_URL = "/api/rules/search";
 
-	public static final String BASE_URL = "/api/rules/search?";
+    private String ruleKey;
 
-	private String ruleKey;
+    public RuleQuery(String ruleKey) {
+        setRuleKey(ruleKey);
+    }
 
-	public RuleQuery(String ruleKey) {
-		setRuleKey(ruleKey);
-	}
+    @Override
+    public final Class<Rules> getModelClass() {
+        return Rules.class;
+    }
 
-	@Override
-	public String getUrl() {
-		StringBuilder url = new StringBuilder(BASE_URL);
-		url.append('?');
-		appendUrlParameter(url, "rule_key", ruleKey);
-		return url.toString();
-	}
+    public static RuleQuery create(String ruleKey) {
+        return new RuleQuery(ruleKey);
+    }
 
-	@Override
-	public final Class<Rules> getModelClass() {
-		return Rules.class;
-	}
+    public String getRuleKey() {
+        return ruleKey;
+    }
 
-	public static RuleQuery create(String ruleKey) {
-		return new RuleQuery(ruleKey);
-	}
+    public void setRuleKey(String ruleKey) {
+        this.ruleKey = ruleKey;
+    }
 
-	public String getRuleKey() {
-		return ruleKey;
-	}
+    @Override
+    public String getBaseUrl() {
+        return BASE_URL;
+    }
 
-	public void setRuleKey(String ruleKey) {
-		this.ruleKey = ruleKey;
-	}
+    @Override
+    public Map<String, Serializable> getParams() {
+        return params;
+    }
 }

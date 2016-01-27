@@ -39,94 +39,87 @@ import org.sonar.report.pdf.TeamWorkbookPDFReporter;
 import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonar.report.pdf.util.Credentials;
 
-import com.lowagie.text.DocumentException;
-
 /**
- * 
+ * PDF Generator
  *
  */
-public class PDFGenerator implements PDFResources {
+public class PDFGenerator {
 
-	private static final String REPORT_PROPERTIES = "/report.properties";
+    private static final String REPORT_PROPERTIES = "/report.properties";
 
-	private static final Logger LOG = LoggerFactory.getLogger(PDFGenerator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PDFGenerator.class);
 
-	private String sonarHostUrl;
-	private String username;
-	private String password;
-	private String reportType;
+    private String sonarHostUrl;
+    private String username;
+    private String password;
+    private String reportType;
 
-	private Project project;
-	private FileSystem fs;
+    private Project project;
+    private FileSystem fs;
 
-	public PDFGenerator(final Project project, final FileSystem fs, final String sonarHostUrl, final String username,
-			final String password, final String reportType) {
-		this.project = project;
-		this.fs = fs;
-		this.sonarHostUrl = sonarHostUrl;
-		this.username = username;
-		this.password = password;
-		this.reportType = reportType;
-	}
+    public PDFGenerator(final Project project, final FileSystem fs, final String sonarHostUrl, final String username,
+            final String password, final String reportType) {
+        this.project = project;
+        this.fs = fs;
+        this.sonarHostUrl = sonarHostUrl;
+        this.username = username;
+        this.password = password;
+        this.reportType = reportType;
+    }
 
-	public void execute() {
-		Properties config = new Properties();
-		Properties configLang = new Properties();
+    /**
+     * Main method : execution of the reporting
+     */
+    public void execute() {
+        Properties config = new Properties();
+        Properties configLang = new Properties();
 
-		try {
-			if (sonarHostUrl != null) {
-				if (sonarHostUrl.endsWith("/")) {
-					sonarHostUrl = sonarHostUrl.substring(0, sonarHostUrl.length() - 1);
-				}
-				config.put(SONAR_BASE_URL, sonarHostUrl);
-				config.put(FRONT_PAGE_LOGO, "sonar.png");
-			} else {
-				config.load(this.getClass().getResourceAsStream(REPORT_PROPERTIES));
-			}
+        try {
+            if (sonarHostUrl != null) {
+                if (sonarHostUrl.endsWith("/")) {
+                    sonarHostUrl = sonarHostUrl.substring(0, sonarHostUrl.length() - 1);
+                }
+                config.put(PDFResources.SONAR_BASE_URL, sonarHostUrl);
+                config.put(PDFResources.FRONT_PAGE_LOGO, "sonar.png");
+            } else {
+                config.load(this.getClass().getResourceAsStream(REPORT_PROPERTIES));
+            }
 
-			ResourceBundle rb = ResourceBundle.getBundle(RESOURCE_NAME, Locale.getDefault(),
-					this.getClass().getClassLoader());
+            ResourceBundle rb = ResourceBundle.getBundle(PDFResources.RESOURCE_NAME, Locale.getDefault(),
+                    this.getClass().getClassLoader());
 
-			Enumeration<String> keys = rb.getKeys();
-			while (keys.hasMoreElements()) {
-				String key = keys.nextElement();
-				configLang.setProperty(key, (String) rb.getObject(key));
-			}
+            Enumeration<String> keys = rb.getKeys();
+            while (keys.hasMoreElements()) {
+                String key = keys.nextElement();
+                configLang.setProperty(key, (String) rb.getObject(key));
+            }
 
-			Credentials credentials = new Credentials(config.getProperty(SONAR_BASE_URL), username, password);
+            Credentials credentials = new Credentials(config.getProperty(PDFResources.SONAR_BASE_URL), username,
+                    password);
 
-			String sonarProjectId = project.getEffectiveKey();
-			String path = fs.workDir().getAbsolutePath() + "/" + sonarProjectId.replace(':', '-') + ".pdf";
+            String sonarProjectId = project.getEffectiveKey();
+            String path = fs.workDir().getAbsolutePath() + "/" + sonarProjectId.replace(':', '-') + ".pdf";
 
-			PDFReporter reporter = null;
-			if (reportType != null) {
-				if ((EXECUTIVE_REPORT_TYPE).equals(reportType)) {
-					LOG.info("Executive report type selected");
-					reporter = new ExecutivePDFReporter(credentials, this.getClass().getResource(SONAR_PNG_FILE),
-							sonarProjectId, config, configLang);
-				} else if ((WORKBOOK_REPORT_TYPE).equals(reportType)) {
-					LOG.info("Team workbook report type selected");
-					reporter = new TeamWorkbookPDFReporter(credentials, this.getClass().getResource(SONAR_PNG_FILE),
-							sonarProjectId, config, configLang);
-				}
-			} else {
-				LOG.info("No report type provided. Default report selected (Team workbook)");
-				reporter = new TeamWorkbookPDFReporter(credentials, this.getClass().getResource(SONAR_PNG_FILE),
-						sonarProjectId, config, configLang);
-			}
-
-			ByteArrayOutputStream baos = reporter.getReport();
-			FileOutputStream fos = new FileOutputStream(new File(path));
-			baos.writeTo(fos);
-			fos.flush();
-			fos.close();
-			LOG.info("PDF report generated (see " + sonarProjectId.replace(':', '-')
-					+ ".pdf on build output directory)");
-		} catch (DocumentException | IOException e) {
-			LOG.error("Problem generating PDF file.", e);
-		} catch (ReportException e) {
-			LOG.error("Internal error: " + e.getMessage(), e);
-		}
-	}
+            PDFReporter reporter = null;
+            if (reportType != null && (PDFResources.EXECUTIVE_REPORT_TYPE).equals(reportType)) {
+                LOG.info("Executive report type selected");
+                reporter = new ExecutivePDFReporter(credentials,
+                        this.getClass().getResource(PDFResources.SONAR_PNG_FILE), sonarProjectId, config, configLang);
+            } else {
+                LOG.info("Team workbook report type selected");
+                reporter = new TeamWorkbookPDFReporter(credentials,
+                        this.getClass().getResource(PDFResources.SONAR_PNG_FILE), sonarProjectId, config, configLang);
+            }
+            ByteArrayOutputStream baos = reporter.getReport();
+            FileOutputStream fos = new FileOutputStream(new File(path));
+            baos.writeTo(fos);
+            fos.flush();
+            fos.close();
+            LOG.info("PDF report generated (see " + sonarProjectId.replace(':', '-')
+                    + ".pdf on build output directory)");
+        } catch (ReportException | IOException e) {
+            LOG.error("Problem generating PDF file.", e);
+        }
+    }
 
 }

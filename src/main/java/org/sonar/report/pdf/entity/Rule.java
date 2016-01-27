@@ -21,83 +21,91 @@ package org.sonar.report.pdf.entity;
 
 import java.util.List;
 
-public class Rule {
+/**
+ * Bean defining the rules
+ *
+ */
+public class Rule implements Entity {
 
-	// Rule key
-	private String key;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2345517439556616421L;
 
-	// Rule name
-	private String name;
+    // Rule key
+    private String key;
 
-	// Rule description
-	private String description;
+    // Rule name
+    private String name;
 
-	// Severity
-	private Severity severity;
+    // Rule description
+    private String description;
 
-	// Violations of this rule: <resource key, violation line> (with limit 100)
-	private List<Violation> topViolatedResources;
+    // Severity
+    private Severity severity;
 
-	// Total violations of this rule
-	private String violationsNumber;
+    // Violations of this rule: <resource key, violation line> (with limit 100)
+    private List<Violation> topViolatedResources;
 
-	private String message;
+    // Total violations of this rule
+    private String violationsNumber;
 
-	public String getName() {
-		return name;
-	}
+    private String message;
 
-	public String getDescription() {
-		return description;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public List<Violation> getTopViolations() {
-		return topViolatedResources;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public List<Violation> getTopViolations() {
+        return topViolatedResources;
+    }
 
-	public void setDescription(final String description) {
-		this.description = description;
-	}
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	public void setTopViolations(final List<Violation> violations) {
-		this.topViolatedResources = violations;
-	}
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public void setTopViolations(final List<Violation> violations) {
+        this.topViolatedResources = violations;
+    }
 
-	public void setKey(final String key) {
-		this.key = key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public String getViolationsNumber() {
-		return violationsNumber;
-	}
+    public void setKey(final String key) {
+        this.key = key;
+    }
 
-	public void setViolationsNumber(final String violationsNumber) {
-		this.violationsNumber = violationsNumber;
-	}
+    public String getViolationsNumber() {
+        return violationsNumber;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public void setViolationsNumber(final String violationsNumber) {
+        this.violationsNumber = violationsNumber;
+    }
 
-	public void setMessage(final String message) {
-		this.message = message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
+    public void setMessage(final String message) {
+        this.message = message;
+    }
 
-	public Severity getSeverity() {
-		return severity;
-	}
+    public Severity getSeverity() {
+        return severity;
+    }
 
-	public void setSeverity(Severity severity) {
-		this.severity = severity;
-	}
+    public void setSeverity(Severity severity) {
+        this.severity = severity;
+    }
 
 }

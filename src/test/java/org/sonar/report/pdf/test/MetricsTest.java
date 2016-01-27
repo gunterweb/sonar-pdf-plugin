@@ -43,9 +43,8 @@ public class MetricsTest extends SonarPDFTest {
 		System.out.println("Checking metrics consistency...");
 		Field[] fields = MetricKeys.class.getFields();
 		for (int i = 0; i < fields.length; i++) {
-			String metricKey = (String) fields[i].get(MetricKeys.class);
-			Assert.assertTrue(allMetricsKeys.contains(fields[i].get(MetricKeys.class)),
-					"Metric " + metricKey + " is not provided");
+			String metricKey = ((MetricKeys) fields[i].get(MetricKeys.class)).getKey();
+			Assert.assertTrue(allMetricsKeys.contains(metricKey), "Metric " + metricKey + " is not provided");
 			System.out.println(metricKey + "... OK");
 		}
 		System.out.println("\nAll metrics are consistent.");

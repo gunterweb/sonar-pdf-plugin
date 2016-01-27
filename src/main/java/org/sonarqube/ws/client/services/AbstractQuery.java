@@ -19,127 +19,173 @@
  */
 package org.sonarqube.ws.client.services;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.annotation.Nullable;
 
 import org.sonarqube.ws.model.Model;
 
-public abstract class AbstractQuery<M extends Model> {
+/**
+ * Abstract Query for a Model
+ *
+ * @param <M>
+ */
+public abstract class AbstractQuery<M extends Model> implements Serializable {
 
-	/**
-	 * Default timeout for waiting data, in milliseconds.
-	 *
-	 * @since 2.10
-	 */
-	public static final int DEFAULT_TIMEOUT_MILLISECONDS = 30 * 1000;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6759723766395108354L;
 
-	private int timeoutMilliseconds = DEFAULT_TIMEOUT_MILLISECONDS;
+    private static final String SHORT_DATE_FORMAT = "yyyy-MM-dd";
 
-	// accepted-language as defined in
-	// http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-	private String locale;
+    private static final String LONG_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
-	/**
-	 * Must start with a slash, for example: /api/metrics
-	 * <p>
-	 * IMPORTANT: In implementations of this method we must use helper methods
-	 * to construct URL.
-	 * </p>
-	 *
-	 * @see #encode(String)
-	 * @see #appendUrlParameter(StringBuilder, String, Object)
-	 * @see #appendUrlParameter(StringBuilder, String, Object[])
-	 * @see #appendUrlParameter(StringBuilder, String, Date, boolean)
-	 */
-	public abstract String getUrl();
+    public static final String JSON_FORMAT = "json";
 
-	/**
-	 * Request body. By default it is empty but it can be overridden.
-	 */
-	public String getBody() {
-		return null;
-	}
+    public static final int DEFAULT_TIMEOUT_MILLISECONDS = 30 * 1000;
 
-	/**
-	 * Get the timeout for waiting data, in milliseconds. A value of zero is
-	 * interpreted as an infinite timeout.
-	 *
-	 * @since 2.10
-	 */
-	public final int getTimeoutMilliseconds() {
-		return timeoutMilliseconds;
-	}
+    private int timeoutMilliseconds = DEFAULT_TIMEOUT_MILLISECONDS;
 
-	/**
-	 * Set the timeout for waiting data, in milliseconds. Avalue of zero is
-	 * interpreted as an infinite timeout.
-	 *
-	 * @since 2.10
-	 */
-	public final AbstractQuery<M> setTimeoutMilliseconds(int i) {
-		this.timeoutMilliseconds = i < 0 ? 0 : i;
-		return this;
-	}
+    // accepted-language as defined in
+    // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+    private String locale;
 
-	/**
-	 * Accepted-language, as defined in
-	 * http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-	 *
-	 * @since 2.10
-	 */
-	public final String getLocale() {
-		return locale;
-	}
+    /**
+     * Must start with a slash, for example: /api/metrics
+     * <p>
+     * IMPORTANT: In implementations of this method we must use helper methods
+     * to construct URL.
+     * </p>
+     *
+     * @see #encode(String)
+     * @see #appendUrlParameter(StringBuilder, String, Object)
+     * @see #appendUrlParameter(StringBuilder, String, Object[])
+     * @see #appendUrlParameter(StringBuilder, String, Date, boolean)
+     */
+    public abstract String getUrl();
 
-	/**
-	 * Set the Accepted-language HTTP parameter
-	 *
-	 * @since 2.10
-	 */
-	public final AbstractQuery<M> setLocale(String locale) {
-		this.locale = locale;
-		return this;
-	}
+    /**
+     * Request body. By default it is empty but it can be overridden.
+     */
+    public String getBody() {
+        return null;
+    }
 
-	/**
-	 * Encodes single parameter value.
-	 */
-	protected static String encode(String value) {
-		return WSUtils.getINSTANCE().encodeUrl(value);
-	}
+    /**
+     * Get the timeout for waiting data, in milliseconds. A value of zero is
+     * interpreted as an infinite timeout.
+     */
+    public final int getTimeoutMilliseconds() {
+        return timeoutMilliseconds;
+    }
 
-	protected static void appendUrlParameter(StringBuilder url, String paramKey, int paramValue) {
-		url.append(paramKey).append('=').append(paramValue).append("&");
-	}
+    /**
+     * Set the timeout for waiting data, in milliseconds. Avalue of zero is
+     * interpreted as an infinite timeout.
+     */
+    public final AbstractQuery<M> setTimeoutMilliseconds(int i) {
+        this.timeoutMilliseconds = i < 0 ? 0 : i;
+        return this;
+    }
 
-	protected static void appendUrlParameter(StringBuilder url, String paramKey, @Nullable Object paramValue) {
-		if (paramValue != null) {
-			url.append(paramKey).append('=').append(encode(paramValue.toString())).append('&');
-		}
-	}
+    /**
+     * Accepted-language, as defined in
+     * http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+     */
+    public final String getLocale() {
+        return locale;
+    }
 
-	protected static void appendUrlParameter(StringBuilder url, String paramKey, @Nullable Object[] paramValues) {
-		if (paramValues != null) {
-			url.append(paramKey).append('=');
-			for (int index = 0; index < paramValues.length; index++) {
-				if (index > 0) {
-					url.append(',');
-				}
-				if (paramValues[index] != null) {
-					url.append(encode(paramValues[index].toString()));
-				}
-			}
-			url.append('&');
-		}
-	}
+    /**
+     * Set the Accepted-language HTTP parameter
+     */
+    public final AbstractQuery<M> setLocale(String locale) {
+        this.locale = locale;
+        return this;
+    }
 
-	protected static void appendUrlParameter(StringBuilder url, String paramKey, @Nullable Date paramValue,
-			boolean includeTime) {
-		if (paramValue != null) {
-			String format = includeTime ? "yyyy-MM-dd'T'HH:mm:ssZ" : "yyyy-MM-dd";
-			url.append(paramKey).append('=').append(encode(WSUtils.getINSTANCE().format(paramValue, format)))
-					.append('&');
-		}
-	}
+    /**
+     * Encodes single parameter value.
+     */
+    protected static String encode(String value) {
+        return WSUtils.getINSTANCE().encodeUrl(value);
+    }
+
+    /**
+     * Append URL parameter for integer parameter
+     * 
+     * @param url
+     *            URL
+     * @param paramKey
+     *            paramKey
+     * @param paramValue
+     *            paramValue
+     */
+    protected static void appendUrlParameter(StringBuilder url, String paramKey, int paramValue) {
+        url.append(paramKey).append('=').append(paramValue).append("&");
+    }
+
+    /**
+     * Append URL parameter for object
+     * 
+     * @param url
+     *            URL
+     * @param paramKey
+     *            paramKey
+     * @param paramValue
+     *            paramValue
+     */
+    protected static void appendUrlParameter(StringBuilder url, String paramKey, @Nullable Object paramValue) {
+        if (paramValue != null) {
+            url.append(paramKey).append('=').append(encode(paramValue.toString())).append('&');
+        }
+    }
+
+    /**
+     * Append URL parameter for objects
+     * 
+     * @param url
+     *            URL
+     * @param paramKey
+     *            paramKey
+     * @param paramValues
+     *            paramValues
+     */
+    protected static void appendUrlParameter(StringBuilder url, String paramKey, @Nullable Object[] paramValues) {
+        if (paramValues != null) {
+            url.append(paramKey).append('=');
+            for (int index = 0; index < paramValues.length; index++) {
+                if (index > 0) {
+                    url.append(',');
+                }
+                if (paramValues[index] != null) {
+                    url.append(encode(paramValues[index].toString()));
+                }
+            }
+            url.append('&');
+        }
+    }
+
+    /**
+     * Append URL parameter for Date
+     * 
+     * @param url
+     *            URL
+     * @param paramKey
+     *            paramKey
+     * @param paramValue
+     *            paramValue
+     * @param includeTime
+     *            includeTime
+     */
+    protected static void appendUrlParameter(StringBuilder url, String paramKey, @Nullable Date paramValue,
+            boolean includeTime) {
+        if (paramValue != null) {
+            String format = includeTime ? LONG_DATE_FORMAT : SHORT_DATE_FORMAT;
+            url.append(paramKey).append('=').append(encode(WSUtils.getINSTANCE().format(paramValue, format)))
+                    .append('&');
+        }
+    }
 }

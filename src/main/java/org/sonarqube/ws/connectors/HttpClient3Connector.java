@@ -34,121 +34,136 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
-import org.sonarqube.ws.client.Host;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sonarqube.ws.client.SonarHost;
 import org.sonarqube.ws.client.services.AbstractQuery;
 import org.sonarqube.ws.client.services.Query;
 
-public class HttpClient3Connector extends Connector {
-	private static final int MAX_TOTAL_CONNECTIONS = 40;
-	private static final int MAX_HOST_CONNECTIONS = 4;
+/**
+ * Implemenation of Connector with Apache HttpClient
+ *
+ */
+public class HttpClient3Connector implements Connector {
+    private static final Logger LOG = LoggerFactory.getLogger(HttpClient3Connector.class);
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4395780993756345105L;
+    private static final int MAX_TOTAL_CONNECTIONS = 40;
+    private static final int MAX_HOST_CONNECTIONS = 4;
 
-	private final Host server;
-	private HttpClient httpClient;
+    private final SonarHost server;
+    private transient HttpClient httpClient;
 
-	public HttpClient3Connector(final Host server) {
-		this.server = server;
-		createClient();
-	}
+    public HttpClient3Connector(final SonarHost server) {
+        this.server = server;
+        createClient();
+    }
 
-	public HttpClient3Connector(Host server, HttpClient httpClient) {
-		this.httpClient = httpClient;
-		this.server = server;
-	}
+    public HttpClient3Connector(SonarHost server, HttpClient httpClient) {
+        this.httpClient = httpClient;
+        this.server = server;
+    }
 
-	private void createClient() {
-		final HttpConnectionManagerParams params = new HttpConnectionManagerParams();
-		params.setConnectionTimeout(AbstractQuery.DEFAULT_TIMEOUT_MILLISECONDS);
-		params.setSoTimeout(AbstractQuery.DEFAULT_TIMEOUT_MILLISECONDS);
-		params.setDefaultMaxConnectionsPerHost(MAX_HOST_CONNECTIONS);
-		params.setMaxTotalConnections(MAX_TOTAL_CONNECTIONS);
-		final MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
-		connectionManager.setParams(params);
-		this.httpClient = new HttpClient(connectionManager);
-		configureCredentials();
-	}
+    private void createClient() {
+        final HttpConnectionManagerParams params = new HttpConnectionManagerParams();
+        params.setConnectionTimeout(AbstractQuery.DEFAULT_TIMEOUT_MILLISECONDS);
+        params.setSoTimeout(AbstractQuery.DEFAULT_TIMEOUT_MILLISECONDS);
+        params.setDefaultMaxConnectionsPerHost(MAX_HOST_CONNECTIONS);
+        params.setMaxTotalConnections(MAX_TOTAL_CONNECTIONS);
+        final MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
+        connectionManager.setParams(params);
+        this.httpClient = new HttpClient(connectionManager);
+        configureCredentials();
+    }
 
-	private void configureCredentials() {
-		if (server.getUsername() != null) {
-			httpClient.getParams().setAuthenticationPreemptive(true);
-			Credentials defaultcreds = new UsernamePasswordCredentials(server.getUsername(), server.getPassword());
-			httpClient.getState().setCredentials(AuthScope.ANY, defaultcreds);
-		}
-	}
+    private void configureCredentials() {
+        if (server.getUsername() != null) {
+            httpClient.getParams().setAuthenticationPreemptive(true);
+            Credentials defaultcreds = new UsernamePasswordCredentials(server.getUsername(), server.getPassword());
+            httpClient.getState().setCredentials(AuthScope.ANY, defaultcreds);
+        }
+    }
 
-	/**
-	 * @since 3.4
-	 */
-	public HttpClient getHttpClient() {
-		return httpClient;
-	}
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
 
-	@Override
-	public String execute(Query<?> query) {
-		return executeRequest(newGetRequest(query));
-	}
+    @Override
+    public String execute(Query<?> query) throws ConnectionException {
+        return executeRequest(newGetRequest(query));
+    }
 
-	private String executeRequest(HttpMethodBase method) {
-		String json = null;
-		try {
-			httpClient.executeMethod(method);
+    /**
+     * Reauest execution
+     * 
+     * @param method
+     *            method
+     * @return String result
+     */
+    private String executeRequest(HttpMethodBase method) throws ConnectionException {
+        String json = null;
+        try {
+            httpClient.executeMethod(method);
 
-			if (method.getStatusCode() == HttpStatus.SC_OK) {
-				json = getResponseBodyAsString(method);
+            if (method.getStatusCode() == HttpStatus.SC_OK) {
+                json = getResponseBodyAsString(method);
 
-			} else if (method.getStatusCode() != HttpStatus.SC_NOT_FOUND) {
-				throw new ConnectionException("HTTP error: " + method.getStatusCode() + ", msg: "
-						+ method.getStatusText() + ", query: " + method);
-			}
+            } else if (method.getStatusCode() != HttpStatus.SC_NOT_FOUND) {
+                throw new ConnectionException("HTTP error: " + method.getStatusCode() + ", msg: "
+                        + method.getStatusText() + ", query: " + method);
+            }
 
-		} catch (IOException e) {
-			throw new ConnectionException("Query: " + method, e);
+        } catch (IOException e) {
+            throw new ConnectionException("Query: " + method, e);
 
-		} finally {
-			if (method != null) {
-				method.releaseConnection();
-			}
-		}
-		return json;
-	}
+        } finally {
+            if (method != null) {
+                method.releaseConnection();
+            }
+        }
+        return json;
+    }
 
-	private HttpMethodBase newGetRequest(Query<?> query) {
-		HttpMethodBase method = new GetMethod(server.getHost() + query.getUrl());
-		initRequest(method, query);
-		return method;
-	}
+    private HttpMethodBase newGetRequest(Query<?> query) {
+        HttpMethodBase method = new GetMethod(server.getHost() + query.getUrl());
+        initRequest(method, query);
+        return method;
+    }
 
-	private void initRequest(HttpMethodBase request, AbstractQuery<?> query) {
-		request.setRequestHeader("Accept", "application/json");
-		if (query.getLocale() != null) {
-			request.setRequestHeader("Accept-Language", query.getLocale());
-		}
-		request.getParams().setSoTimeout(query.getTimeoutMilliseconds());
-	}
+    private void initRequest(HttpMethodBase request, AbstractQuery<?> query) {
+        request.setRequestHeader("Accept", "application/json");
+        if (query.getLocale() != null) {
+            request.setRequestHeader("Accept-Language", query.getLocale());
+        }
+        request.getParams().setSoTimeout(query.getTimeoutMilliseconds());
+    }
 
-	private String getResponseBodyAsString(HttpMethod method) {
-		BufferedReader reader = null;
-		try {
-			final InputStream inputStream = method.getResponseBodyAsStream();
-			reader = new BufferedReader(new InputStreamReader(inputStream));
-			final StringBuilder sb = new StringBuilder();
-			String line;
+    private String getResponseBodyAsString(HttpMethod method) throws ConnectionException {
+        BufferedReader reader = null;
+        try {
+            final InputStream inputStream = method.getResponseBodyAsStream();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            final StringBuilder sb = new StringBuilder();
+            String line;
 
-			while ((line = reader.readLine()) != null) {
-				sb.append(line).append("\n");
-			}
-			return sb.toString();
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            return sb.toString();
 
-		} catch (IOException e) {
-			throw new ConnectionException("Can not read response", e);
+        } catch (IOException e) {
+            throw new ConnectionException("Can not read response", e);
 
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (Exception e) {
-					// wsclient does not have logging ability -> silently ignore
-				}
-			}
-		}
-	}
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    LOG.error("Error closing reader", e);
+                }
+            }
+        }
+    }
 }

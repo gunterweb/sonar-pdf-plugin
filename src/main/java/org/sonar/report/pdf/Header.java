@@ -41,43 +41,48 @@ import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * 
- *
+ * Header for report
  */
 public class Header extends PdfPageEventHelper {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Header.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Header.class);
 
-	private URL logo;
-	private Project project;
+    private URL logo;
+    private Project project;
 
-	public Header(final URL logo, final Project project) {
-		this.logo = logo;
-		this.project = project;
-	}
+    public Header(final URL logo, final Project project) {
+        this.logo = logo;
+        this.project = project;
+    }
 
-	@Override
-	public void onEndPage(final PdfWriter writer, final Document document) {
-		try {
-			Image logoImage = Image.getInstance(logo);
-			Rectangle page = document.getPageSize();
-			PdfPTable head = new PdfPTable(4);
-			head.getDefaultCell().setVerticalAlignment(PdfCell.ALIGN_MIDDLE);
-			head.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_CENTER);
-			head.addCell(logoImage);
-			Phrase projectName = new Phrase(project.getName(),
-					FontFactory.getFont(FontFactory.COURIER, 12, Font.NORMAL, Color.GRAY));
-			Phrase phrase = new Phrase(PDFResources.SONAR_PDF_REPORT,
-					FontFactory.getFont(FontFactory.COURIER, 12, Font.NORMAL, Color.GRAY));
-			head.getDefaultCell().setColspan(2);
-			head.addCell(phrase);
-			head.getDefaultCell().setColspan(1);
-			head.addCell(projectName);
-			head.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
-			head.writeSelectedRows(0, -1, document.leftMargin(), page.getHeight() - 20, writer.getDirectContent());
-			head.setSpacingAfter(10);
-		} catch (BadElementException | IOException e) {
-			LOG.error("Can not generate PDF header", e);
-		}
-	}
+    /**
+     * 
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onEndPage(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document)
+     */
+    @Override
+    public void onEndPage(final PdfWriter writer, final Document document) {
+        try {
+            Image logoImage = Image.getInstance(logo);
+            Rectangle page = document.getPageSize();
+            PdfPTable head = new PdfPTable(4);
+            head.getDefaultCell().setVerticalAlignment(PdfCell.ALIGN_MIDDLE);
+            head.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+            head.addCell(logoImage);
+            Phrase projectName = new Phrase(project.getName(),
+                    FontFactory.getFont(FontFactory.COURIER, 12, Font.NORMAL, Color.GRAY));
+            Phrase phrase = new Phrase(PDFResources.SONAR_PDF_REPORT,
+                    FontFactory.getFont(FontFactory.COURIER, 12, Font.NORMAL, Color.GRAY));
+            head.getDefaultCell().setColspan(2);
+            head.addCell(phrase);
+            head.getDefaultCell().setColspan(1);
+            head.addCell(projectName);
+            head.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
+            head.writeSelectedRows(0, -1, document.leftMargin(), page.getHeight() - 20, writer.getDirectContent());
+            head.setSpacingAfter(10);
+        } catch (BadElementException | IOException e) {
+            LOG.error("Can not generate PDF header", e);
+        }
+    }
 
 }

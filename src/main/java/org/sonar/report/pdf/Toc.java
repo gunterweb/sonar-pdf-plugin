@@ -41,87 +41,107 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
 
+/**
+ * Table of contents
+ *
+ */
 public class Toc extends PdfPageEventHelper {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Events.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Events.class);
 
-	private Document toc;
-	private ByteArrayOutputStream tocOutputStream;
-	private PdfPTable content;
-	private PdfWriter writer;
+    private Document tocDocument;
+    private ByteArrayOutputStream tocOutputStream;
+    private PdfPTable content;
+    private PdfWriter writer;
 
-	public Toc() {
-		toc = new Document(PageSize.A4, 50, 50, 110, 50);
-		content = new PdfPTable(2);
-		Rectangle page = toc.getPageSize();
-		content.setTotalWidth(page.getWidth() - toc.leftMargin() - toc.rightMargin());
-		content.getDefaultCell().setUseVariableBorders(true);
-		content.getDefaultCell().setBorderColorBottom(Color.WHITE);
-		content.getDefaultCell().setBorderColorRight(Color.WHITE);
-		content.getDefaultCell().setBorderColorLeft(Color.WHITE);
-		content.getDefaultCell().setBorderColorTop(Color.WHITE);
-		content.getDefaultCell().setBorderWidthBottom(2f);
-	}
+    public Toc() {
+        tocDocument = new Document(PageSize.A4, 50, 50, 110, 50);
+        content = new PdfPTable(2);
+        Rectangle page = tocDocument.getPageSize();
+        content.setTotalWidth(page.getWidth() - tocDocument.leftMargin() - tocDocument.rightMargin());
+        content.getDefaultCell().setUseVariableBorders(true);
+        content.getDefaultCell().setBorderColorBottom(Color.WHITE);
+        content.getDefaultCell().setBorderColorRight(Color.WHITE);
+        content.getDefaultCell().setBorderColorLeft(Color.WHITE);
+        content.getDefaultCell().setBorderColorTop(Color.WHITE);
+        content.getDefaultCell().setBorderWidthBottom(2f);
+    }
 
-	@Override
-	public void onChapter(final PdfWriter writer, final Document document, final float position,
-			final Paragraph title) {
-		content.getDefaultCell().setBorderColorBottom(Color.LIGHT_GRAY);
-		content.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_LEFT);
-		content.getDefaultCell().setUseBorderPadding(true);
-		content.addCell(new Phrase(title.getContent(), new Font(Font.HELVETICA, 11)));
-		content.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-		content.addCell(new Phrase("Page " + document.getPageNumber(), new Font(Font.HELVETICA, 11)));
-		content.getDefaultCell().setBorderColorBottom(Color.WHITE);
-		content.getDefaultCell().setUseBorderPadding(false);
-	}
+    /**
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onChapter(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document, float, com.lowagie.text.Paragraph)
+     */
+    @Override
+    public void onChapter(final PdfWriter writer, final Document document, final float position,
+            final Paragraph title) {
+        content.getDefaultCell().setBorderColorBottom(Color.LIGHT_GRAY);
+        content.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        content.getDefaultCell().setUseBorderPadding(true);
+        content.addCell(new Phrase(title.getContent(), new Font(Font.HELVETICA, 11)));
+        content.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+        content.addCell(new Phrase("Page " + document.getPageNumber(), new Font(Font.HELVETICA, 11)));
+        content.getDefaultCell().setBorderColorBottom(Color.WHITE);
+        content.getDefaultCell().setUseBorderPadding(false);
+    }
 
-	@Override
-	public void onChapterEnd(final PdfWriter writer, final Document document, final float position) {
-		content.addCell("");
-		content.addCell("");
-	}
+    /**
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onChapterEnd(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document, float)
+     */
+    @Override
+    public void onChapterEnd(final PdfWriter writer, final Document document, final float position) {
+        content.addCell("");
+        content.addCell("");
+    }
 
-	@Override
-	public void onSection(final PdfWriter writer, final Document document, final float position, final int depth,
-			final Paragraph title) {
-		content.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_LEFT);
-		if (depth == 2) {
-			content.getDefaultCell().setIndent(10);
-			content.addCell(new Phrase(title.getContent(), new Font(Font.HELVETICA, 10)));
-		} else {
-			content.getDefaultCell().setIndent(20);
-			content.addCell(new Phrase(title.getContent(), new Font(Font.HELVETICA, 9)));
-		}
-		content.getDefaultCell().setIndent(0);
-		content.addCell("");
-	}
+    /**
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onSection(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document, float, int, com.lowagie.text.Paragraph)
+     */
+    @Override
+    public void onSection(final PdfWriter writer, final Document document, final float position, final int depth,
+            final Paragraph title) {
+        content.getDefaultCell().setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        if (depth == 2) {
+            content.getDefaultCell().setIndent(10);
+            content.addCell(new Phrase(title.getContent(), new Font(Font.HELVETICA, 10)));
+        } else {
+            content.getDefaultCell().setIndent(20);
+            content.addCell(new Phrase(title.getContent(), new Font(Font.HELVETICA, 9)));
+        }
+        content.getDefaultCell().setIndent(0);
+        content.addCell("");
+    }
 
-	@Override
-	public void onCloseDocument(final PdfWriter writer, final Document document) {
-		try {
-			toc.add(content);
-		} catch (DocumentException e) {
-			LOG.error("Can not add TOC", e);
-		}
-	}
+    /**
+     * @see com.lowagie.text.pdf.PdfPageEventHelper#onCloseDocument(com.lowagie.text.pdf.PdfWriter,
+     *      com.lowagie.text.Document)
+     */
+    @Override
+    public void onCloseDocument(final PdfWriter writer, final Document document) {
+        try {
+            tocDocument.add(content);
+        } catch (DocumentException e) {
+            LOG.error("Can not add TOC", e);
+        }
+    }
 
-	public Document getTocDocument() {
-		return toc;
-	}
+    public Document getTocDocument() {
+        return tocDocument;
+    }
 
-	public ByteArrayOutputStream getTocOutputStream() {
-		return tocOutputStream;
-	}
+    public ByteArrayOutputStream getTocOutputStream() {
+        return tocOutputStream;
+    }
 
-	public void setHeader(final Header header) {
-		tocOutputStream = new ByteArrayOutputStream();
-		writer = null;
-		try {
-			writer = PdfWriter.getInstance(toc, tocOutputStream);
-			writer.setPageEvent(header);
-		} catch (DocumentException e) {
-			LOG.error("Can not add TOC", e);
-		}
-	}
+    public void setHeader(final Header header) {
+        tocOutputStream = new ByteArrayOutputStream();
+        writer = null;
+        try {
+            writer = PdfWriter.getInstance(tocDocument, tocOutputStream);
+            writer.setPageEvent(header);
+        } catch (DocumentException e) {
+            LOG.error("Cannot add TOC", e);
+        }
+    }
 }

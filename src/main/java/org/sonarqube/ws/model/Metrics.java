@@ -22,34 +22,45 @@ package org.sonarqube.ws.model;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Metrics model
+ *
+ */
 public class Metrics implements Model {
-	private List<Metric> metrics;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1664677638288297248L;
+    @SerializedName("metrics")
+    private List<Metric> metricsList;
 
-	public List<Metric> getMetrics() {
-		if (metrics == null) {
-			return Collections.emptyList();
-		}
-		return metrics;
-	}
+    public List<Metric> getMetrics() {
+        if (metricsList == null) {
+            return Collections.emptyList();
+        }
+        return metricsList;
+    }
 
-	public Metric getMetric(String metricKey) {
-		for (Metric metric : getMetrics()) {
-			if (metricKey.equals(metric.getKey())) {
-				return metric;
-			}
-		}
-		return null;
-	}
+    public Metric getMetric(String metricKey) {
+        for (Metric metric : getMetrics()) {
+            if (metricKey.equals(metric.getKey())) {
+                return metric;
+            }
+        }
+        return null;
+    }
 
-	public String getMetricName(String metricKey) {
-		Metric metric = getMetric(metricKey);
-		if (metric != null) {
-			return metric.getName();
-		}
-		return null;
-	}
+    public String getMetricName(String metricKey) {
+        Metric metric = getMetric(metricKey);
+        if (metric != null) {
+            return metric.getName();
+        }
+        return null;
+    }
 
-	public void setMetrics(List<Metric> metrics) {
-		this.metrics = metrics;
-	}
+    public void setMetrics(List<Metric> metrics) {
+        this.metricsList = metrics;
+    }
 }

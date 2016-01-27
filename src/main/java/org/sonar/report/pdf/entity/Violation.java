@@ -21,46 +21,54 @@ package org.sonar.report.pdf.entity;
 
 import org.sonar.report.pdf.util.MetricKeys;
 
-public class Violation {
+/**
+ * Violation bean
+ *
+ */
+public class Violation implements Entity {
 
-	private String resource;
-	private String line;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2050348920551647807L;
+    private String resource;
+    private String line;
 
-	public Violation(final String line, final String resource) {
-		this.line = line;
-		this.resource = resource;
-	}
+    public Violation(final String line, final String resource) {
+        this.line = line;
+        this.resource = resource;
+    }
 
-	public String getResource() {
-		return resource;
-	}
+    public String getResource() {
+        return resource;
+    }
 
-	public String getLine() {
-		return line;
-	}
+    public String getLine() {
+        return line;
+    }
 
-	public void setResource(final String resource) {
-		this.resource = resource;
-	}
+    public void setResource(final String resource) {
+        this.resource = resource;
+    }
 
-	public void setLine(final String line) {
-		this.line = line;
-	}
+    public void setLine(final String line) {
+        this.line = line;
+    }
 
-	public static String getViolationLevelByKey(final String level) {
-		String violationLevel = null;
-		if (level.equals(Severity.INFO)) {
-			violationLevel = MetricKeys.INFO_VIOLATIONS;
-		} else if (level.equals(Severity.MINOR)) {
-			violationLevel = MetricKeys.MINOR_VIOLATIONS;
-		} else if (level.equals(Severity.MAJOR)) {
-			violationLevel = MetricKeys.MAJOR_VIOLATIONS;
-		} else if (level.equals(Severity.CRITICAL)) {
-			violationLevel = MetricKeys.CRITICAL_VIOLATIONS;
-		} else if (level.equals(Severity.BLOCKER)) {
-			violationLevel = MetricKeys.BLOCKER_VIOLATIONS;
-		}
-		return violationLevel;
-	}
+    public static MetricKeys getViolationLevelByKey(final String level) {
+        MetricKeys violationLevel = null;
+        if (level.equals(Severity.INFO.getValue())) {
+            violationLevel = MetricKeys.INFO_VIOLATIONS;
+        } else if (level.equals(Severity.MINOR.getValue())) {
+            violationLevel = MetricKeys.MINOR_VIOLATIONS;
+        } else if (level.equals(Severity.MAJOR.getValue())) {
+            violationLevel = MetricKeys.MAJOR_VIOLATIONS;
+        } else if (level.equals(Severity.CRITICAL.getValue())) {
+            violationLevel = MetricKeys.CRITICAL_VIOLATIONS;
+        } else if (level.equals(Severity.BLOCKER.getValue())) {
+            violationLevel = MetricKeys.BLOCKER_VIOLATIONS;
+        }
+        return violationLevel;
+    }
 
 }

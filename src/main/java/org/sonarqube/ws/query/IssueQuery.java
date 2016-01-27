@@ -19,192 +19,174 @@
  */
 package org.sonarqube.ws.query;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.sonarqube.ws.client.services.Query;
-import org.sonarqube.ws.internal.EncodingUtils;
 import org.sonarqube.ws.model.Issues;
 
+/**
+ * Query for issues
+ *
+ */
 public class IssueQuery extends Query<Issues> {
-	private final Map<String, Object> params = new HashMap<>();
-	private static final String BASE_URL = "/api/issues/search";
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8282477750415566385L;
+    private final Map<String, Serializable> params = new HashMap<>();
+    private static final String BASE_URL = "/api/issues/search";
 
-	private IssueQuery() {
-	}
+    private IssueQuery() {
+    }
 
-	@Override
-	public Class<Issues> getModelClass() {
-		return Issues.class;
-	}
+    @Override
+    public Class<Issues> getModelClass() {
+        return Issues.class;
+    }
 
-	@Override
-	public String getUrl() {
-		StringBuilder url = new StringBuilder(BASE_URL);
-		url.append('?');
-		for (Map.Entry<String, Object> entry : params.entrySet()) {
-			appendUrlParameter(url, entry.getKey(), entry.getValue());
-		}
-		return url.toString();
-	}
+    public static IssueQuery create() {
+        return new IssueQuery();
+    }
 
-	public static IssueQuery create() {
-		return new IssueQuery();
-	}
+    public IssueQuery actionPlans(String... s) {
+        return (IssueQuery) addParam("actionPlans", s);
+    }
 
-	/**
-	 * URL query string, for internal use
-	 */
-	public Map<String, Object> urlParams() {
-		return params;
-	}
+    public IssueQuery additionalFields(String... s) {
+        return (IssueQuery) addParam("additionalFields", s);
+    }
 
-	public IssueQuery actionPlans(String... s) {
-		return addParam("actionPlans", s);
-	}
+    public IssueQuery asc(boolean asc) {
+        return (IssueQuery) addParam("asc", asc);
+    }
 
-	public IssueQuery additionalFields(String... s) {
-		return addParam("additionalFields", s);
-	}
+    public IssueQuery assigned(Boolean assigned) {
+        return (IssueQuery) addParam("assigned", assigned);
+    }
 
-	public IssueQuery asc(boolean asc) {
-		params.put("asc", asc);
-		return this;
-	}
+    public IssueQuery assignees(String... s) {
+        return (IssueQuery) addParam("assignees", s);
+    }
 
-	public IssueQuery assigned(Boolean assigned) {
-		params.put("assigned", assigned);
-		return this;
-	}
+    public IssueQuery authors(String... s) {
+        return (IssueQuery) addParam("authors", s);
+    }
 
-	public IssueQuery assignees(String... s) {
-		return addParam("assignees", s);
-	}
+    public IssueQuery componentKeys(String... s) {
+        return (IssueQuery) addParam("componentKeys", s);
+    }
 
-	public IssueQuery authors(String... s) {
-		return addParam("authors", s);
-	}
+    public IssueQuery createdAt(Date d) {
+        return (IssueQuery) addParam("createdAt", d);
+    }
 
-	public IssueQuery componentKeys(String... s) {
-		return addParam("componentKeys", s);
-	}
+    public IssueQuery createdAfter(Date d) {
+        return (IssueQuery) addParam("createdAfter", d);
+    }
 
-	public IssueQuery createdAt(Date d) {
-		params.put("createdAt", EncodingUtils.toQueryParam(d, true));
-		return this;
-	}
+    public IssueQuery createdBefore(Date d) {
+        return (IssueQuery) addParam("createdBefore", d);
+    }
 
-	public IssueQuery createdAfter(Date d) {
-		params.put("createdAfter", EncodingUtils.toQueryParam(d, true));
-		return this;
-	}
+    public IssueQuery createdInLast(String range) {
+        return (IssueQuery) addParam("createdInLast", range);
+    }
 
-	public IssueQuery createdBefore(Date d) {
-		params.put("createdBefore", EncodingUtils.toQueryParam(d, true));
-		return this;
-	}
+    public IssueQuery directories(String... keys) {
+        return (IssueQuery) addParam("directories", keys);
+    }
 
-	public IssueQuery createdInLast(String range) {
-		params.put("createdInLast", range);
-		return this;
-	}
+    public IssueQuery facetMode(String... mode) {
+        return (IssueQuery) addParam("facetMode", mode);
+    }
 
-	public IssueQuery directories(String... keys) {
-		return addParam("directories", keys);
-	}
+    public IssueQuery facets(String... s) {
+        return (IssueQuery) addParam("facets", s);
+    }
 
-	public IssueQuery facetMode(String... mode) {
-		return addParam("facetMode", mode);
-	}
+    public IssueQuery fileUuids(String... s) {
+        return (IssueQuery) addParam("fileUuids", s);
+    }
 
-	public IssueQuery facets(String... s) {
-		return addParam("facets", s);
-	}
+    public IssueQuery issues(String... keys) {
+        return (IssueQuery) addParam("issues", keys);
+    }
 
-	public IssueQuery fileUuids(String... s) {
-		return addParam("fileUuids", s);
-	}
+    public IssueQuery languages(String... s) {
+        return (IssueQuery) addParam("languages", s);
+    }
 
-	public IssueQuery issues(String... keys) {
-		return addParam("issues", keys);
-	}
+    public IssueQuery moduleUuids(String... s) {
+        return (IssueQuery) addParam("moduleUuids", s);
+    }
 
-	public IssueQuery languages(String... s) {
-		return addParam("languages", s);
-	}
+    public IssueQuery onComponentOnly(boolean onComponentOnly) {
+        return (IssueQuery) addParam("planned", onComponentOnly);
+    }
 
-	public IssueQuery moduleUuids(String... s) {
-		return addParam("moduleUuids", s);
-	}
+    public IssueQuery pageIndex(int pageIndex) {
+        return (IssueQuery) addParam("p", pageIndex);
+    }
 
-	public IssueQuery onComponentOnly(boolean onComponentOnly) {
-		params.put("onComponentOnly", onComponentOnly);
-		return this;
-	}
+    public IssueQuery planned(Boolean planned) {
+        return (IssueQuery) addParam("planned", planned);
+    }
 
-	public IssueQuery pageIndex(int pageIndex) {
-		params.put("p", pageIndex);
-		return this;
-	}
+    public IssueQuery projectKeys(String... s) {
+        return (IssueQuery) addParam("projectKeys", s);
+    }
 
-	public IssueQuery planned(Boolean planned) {
-		params.put("planned", planned);
-		return this;
-	}
+    public IssueQuery projectUuids(String... s) {
+        return (IssueQuery) addParam("projectUuids", s);
+    }
 
-	public IssueQuery projectKeys(String... s) {
-		return addParam("projectKeys", s);
-	}
+    public IssueQuery pageSize(int pageSize) {
+        return (IssueQuery) addParam("ps", pageSize);
+    }
 
-	public IssueQuery projectUuids(String... s) {
-		return addParam("projectUuids", s);
-	}
+    public IssueQuery reporters(String... s) {
+        return (IssueQuery) addParam("reporters", s);
+    }
 
-	public IssueQuery pageSize(int pageSize) {
-		params.put("ps", pageSize);
-		return this;
-	}
+    public IssueQuery resolutions(String... resolutions) {
+        return (IssueQuery) addParam("resolutions", resolutions);
+    }
 
-	public IssueQuery reporters(String... s) {
-		return addParam("reporters", s);
-	}
+    public IssueQuery resolved(Boolean resolved) {
+        return (IssueQuery) addParam("resolved", resolved);
+    }
 
-	public IssueQuery resolutions(String... resolutions) {
-		return addParam("resolutions", resolutions);
-	}
+    public IssueQuery rules(String... s) {
+        return (IssueQuery) addParam("rules", s);
+    }
 
-	public IssueQuery resolved(Boolean resolved) {
-		params.put("resolved", resolved);
-		return this;
-	}
+    public IssueQuery sort(String sort) {
+        return (IssueQuery) addParam("s", sort);
+    }
 
-	public IssueQuery rules(String... s) {
-		return addParam("rules", s);
-	}
+    public IssueQuery severities(String... severities) {
+        return (IssueQuery) addParam("severities", severities);
+    }
 
-	public IssueQuery sort(String sort) {
-		params.put("s", sort);
-		return this;
-	}
+    public IssueQuery statuses(String... statuses) {
+        return (IssueQuery) addParam("statuses", statuses);
+    }
 
-	public IssueQuery severities(String... severities) {
-		return addParam("severities", severities);
-	}
+    public IssueQuery tags(String... tags) {
+        return (IssueQuery) addParam("tags", tags);
+    }
 
-	public IssueQuery statuses(String... statuses) {
-		return addParam("statuses", statuses);
-	}
+    @Override
+    public String getBaseUrl() {
+        return BASE_URL;
+    }
 
-	public IssueQuery tags(String... tags) {
-		return addParam("tags", tags);
-	}
-
-	private IssueQuery addParam(String key, String[] values) {
-		if (values != null) {
-			params.put(key, EncodingUtils.toQueryParam(values));
-		}
-		return this;
-	}
+    @Override
+    public Map<String, Serializable> getParams() {
+        return params;
+    }
 
 }

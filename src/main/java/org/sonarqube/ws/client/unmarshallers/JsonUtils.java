@@ -29,94 +29,95 @@ import javax.annotation.Nullable;
 
 import org.json.simple.JSONArray;
 
+/**
+ * JSON Utils
+ *
+ */
 public class JsonUtils {
 
-	private JsonUtils() {
-		// only static methods
-	}
+    private JsonUtils() {
+        // only static methods
+    }
 
-	@CheckForNull
-	public static String getString(Map<?, ?> obj, String field) {
-		Object value = obj.get(field);
-		if (value instanceof String || value instanceof Number) {
-			return value.toString();
-		}
-		return null;
-	}
+    @CheckForNull
+    public static String getString(Map<?, ?> obj, String field) {
+        Object value = obj.get(field);
+        if (value instanceof String || value instanceof Number) {
+            return value.toString();
+        }
+        return null;
+    }
 
-	@CheckForNull
-	public static Integer getInteger(Map<?, ?> obj, String field) {
-		Object value = obj.get(field);
-		if (value != null) {
-			return ((Long) value).intValue();
-		}
-		return null;
-	}
+    @CheckForNull
+    public static Integer getInteger(Map<?, ?> obj, String field) {
+        Object value = obj.get(field);
+        if (value != null) {
+            return ((Long) value).intValue();
+        }
+        return null;
+    }
 
-	@CheckForNull
-	public static Boolean getBoolean(Map<?, ?> obj, String field) {
-		Object value = obj.get(field);
-		if (value != null) {
-			return (Boolean) value;
-		}
-		return null;
-	}
+    @CheckForNull
+    public static Boolean getBoolean(Map<?, ?> obj, String field) {
+        Object value = obj.get(field);
+        if (value != null) {
+            return (Boolean) value;
+        }
+        return null;
+    }
 
-	@CheckForNull
-	public static Long getLong(Map<?, ?> obj, String field) {
-		Object value = obj.get(field);
-		if (value != null) {
-			return (Long) value;
-		}
-		return null;
-	}
+    @CheckForNull
+    public static Long getLong(Map<?, ?> obj, String field) {
+        Object value = obj.get(field);
+        if (value != null) {
+            return (Long) value;
+        }
+        return null;
+    }
 
-	@CheckForNull
-	public static Double getDouble(Map<?, ?> obj, String field) {
-		Object value = obj.get(field);
-		if (value != null) {
-			if (value instanceof Long) {
-				return ((Long) value).doubleValue();
-			}
-			return (Double) value;
-		}
-		return null;
-	}
+    @CheckForNull
+    public static Double getDouble(Map<?, ?> obj, String field) {
+        Object value = obj.get(field);
+        if (value != null) {
+            if (value instanceof Long) {
+                return ((Long) value).doubleValue();
+            }
+            return (Double) value;
+        }
+        return null;
+    }
 
-	/**
-	 * @since 2.5
-	 */
-	@CheckForNull
-	public static JSONArray getArray(Map<?, ?> obj, String field) {
-		return (JSONArray) obj.get(field);
-	}
+    @CheckForNull
+    public static JSONArray getArray(Map<?, ?> obj, String field) {
+        return (JSONArray) obj.get(field);
+    }
 
-	@CheckForNull
-	public static Date getDateTime(Map<?, ?> obj, String field) {
-		return parseDate(getString(obj, field), "yyyy-MM-dd'T'HH:mm:ssZ");
-	}
+    @CheckForNull
+    public static Date getDateTime(Map<?, ?> obj, String field) {
+        return parseDate(getString(obj, field), "yyyy-MM-dd'T'HH:mm:ssZ");
+    }
 
-	@CheckForNull
-	public static Date getDate(Map<?, ?> obj, String field) {
-		return parseDate(getString(obj, field));
-	}
+    @CheckForNull
+    public static Date getDate(Map<?, ?> obj, String field) {
+        return parseDate(getString(obj, field));
+    }
 
-	@CheckForNull
-	public static Date parseDate(@Nullable String value) {
-		return parseDate(value, "yyyy-MM-dd");
-	}
+    @CheckForNull
+    public static Date parseDate(@Nullable String value) {
+        return parseDate(value, "yyyy-MM-dd");
+    }
 
-	@CheckForNull
-	private static Date parseDate(@Nullable String value, String format) {
-		if (value != null) {
-			try {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-				return dateFormat.parse(value);
+    @CheckForNull
+    private static Date parseDate(@Nullable String value, String format) {
+        if (value != null) {
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+                return dateFormat.parse(value);
 
-			} catch (ParseException e) {
-				throw new IllegalArgumentException("Fail to parse date '" + value + "': " + format, e);
-			}
-		}
-		return null;
-	}
+            } catch (ParseException e) {
+                throw new IllegalArgumentException("Fail to parse date '" + value + "': " + format, e);
+            }
+        }
+        return null;
+    }
 }

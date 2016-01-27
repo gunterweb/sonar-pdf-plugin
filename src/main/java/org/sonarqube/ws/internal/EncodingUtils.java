@@ -22,31 +22,35 @@ package org.sonarqube.ws.internal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Encoding utils
+ *
+ */
 public class EncodingUtils {
-	private static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-	private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
-	private EncodingUtils() {
-		// only static methods
-	}
+    private EncodingUtils() {
+        // only static methods
+    }
 
-	public static String toQueryParam(String[] strings) {
-		StringBuilder sb = new StringBuilder();
-		boolean first = true;
-		for (String string : strings) {
-			if (!first) {
-				sb.append(',');
-			}
-			sb.append(string);
-			first = false;
-		}
-		return sb.toString();
-	}
+    public static String toQueryParam(String[] strings) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (String string : strings) {
+            if (!first) {
+                sb.append(',');
+            }
+            sb.append(string);
+            first = false;
+        }
+        return sb.toString();
+    }
 
-	public static String toQueryParam(Date d, boolean includeTime) {
-		String format = includeTime ? DATETIME_FORMAT : DATE_FORMAT;
-		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-		return dateFormat.format(d);
-	}
+    public static String toQueryParam(Date d, boolean includeTime) {
+        String format = includeTime ? DATETIME_FORMAT : DATE_FORMAT;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(d);
+    }
 
 }

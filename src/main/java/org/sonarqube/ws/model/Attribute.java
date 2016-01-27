@@ -20,57 +20,22 @@
 package org.sonarqube.ws.model;
 
 /**
- * Rule model
+ * Attribute model
  *
  */
-public class Rule implements Model {
+public class Attribute implements Model {
     /**
      * 
      */
-    private static final long serialVersionUID = 7874511314888199627L;
-    String key;
-    String name;
-    String status;
-    String lang;
-    String langName;
+    private static final long serialVersionUID = 4369837425589707034L;
+    private String jiraIssueKey;
 
-    public String getKey() {
-        return key;
+    public String getJiraIssueKey() {
+        return jiraIssueKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setJiraIssueKey(String jiraIssueKey) {
+        this.jiraIssueKey = jiraIssueKey;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
-    public String getLangName() {
-        return langName;
-    }
-
-    public void setLangName(String langName) {
-        this.langName = langName;
-    }
 }

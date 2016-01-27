@@ -19,21 +19,27 @@
  */
 package org.sonarqube.ws.connectors;
 
-public class ConnectionException extends RuntimeException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5594732002932050667L;
+import org.sonar.report.pdf.entity.exception.ReportException;
 
-	public ConnectionException(String s) {
-		super(s);
-	}
+/**
+ * Connection exception
+ *
+ */
+public class ConnectionException extends ReportException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5594732002932050667L;
 
-	public ConnectionException(String s, Throwable throwable) {
-		super(s, throwable);
-	}
+    public ConnectionException(String s) {
+        super(s);
+    }
 
-	public ConnectionException(Throwable throwable) {
-		super(throwable);
-	}
+    public ConnectionException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
+
+    public ConnectionException(Throwable throwable) {
+        super(throwable);
+    }
 }

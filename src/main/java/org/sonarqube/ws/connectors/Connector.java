@@ -19,14 +19,20 @@
  */
 package org.sonarqube.ws.connectors;
 
+import java.io.Serializable;
+
 import org.sonarqube.ws.client.services.Query;
 
-public abstract class Connector {
-	/**
-	 * @return JSON response or null if 404 NOT FOUND error
-	 * @throws ConnectionException
-	 *             if connection error or HTTP status not in (200, 404)
-	 */
-	public abstract String execute(Query<?> query);
+/**
+ * Connector interface
+ *
+ */
+public interface Connector extends Serializable {
+    /**
+     * @return JSON response or null if 404 NOT FOUND error
+     * @throws ConnectionException
+     *             if connection error or HTTP status not in (200, 404)
+     */
+    public String execute(Query<?> query) throws ConnectionException;
 
 }

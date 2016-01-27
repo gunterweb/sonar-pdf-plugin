@@ -19,59 +19,67 @@
  */
 package org.sonarqube.ws.model;
 
+/**
+ * Component model
+ *
+ */
 public class Component implements Model {
-	String key;
-	Boolean enabled;
-	String qualifier;
-	String name;
-	String longName;
-	String path;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4943983118877331019L;
+    String key;
+    Boolean enabled;
+    String qualifier;
+    String name;
+    String longName;
+    String path;
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	public Boolean getEnabled() {
-		return enabled;
-	}
+    public Boolean getEnabled() {
+        return enabled;
+    }
 
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	public String getQualifier() {
-		return qualifier;
-	}
+    public String getQualifier() {
+        return qualifier;
+    }
 
-	public void setQualifier(String qualifier) {
-		this.qualifier = qualifier;
-	}
+    public void setQualifier(String qualifier) {
+        this.qualifier = qualifier;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getLongName() {
-		return longName;
-	}
+    public String getLongName() {
+        return longName;
+    }
 
-	public void setLongName(String longName) {
-		this.longName = longName;
-	}
+    public void setLongName(String longName) {
+        this.longName = longName;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

@@ -21,60 +21,68 @@ package org.sonarqube.ws.model;
 
 import java.util.Date;
 
+/**
+ * Comment model
+ *
+ */
 public class Comment implements Model {
-	private String key;
-	private String login;
-	private String htmlText;
-	private String markDown;
-	private Boolean updateable;
-	private Date createdAt;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6803968335281767273L;
+    private String key;
+    private String login;
+    private String htmlText;
+    private String markDown;
+    private Boolean updateable;
+    private Date createdAt;
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	public String getLogin() {
-		return login;
-	}
+    public String getLogin() {
+        return login;
+    }
 
-	public void setLogin(String login) {
-		this.login = login;
-	}
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
-	public String getHtmlText() {
-		return htmlText;
-	}
+    public String getHtmlText() {
+        return htmlText;
+    }
 
-	public void setHtmlText(String htmlText) {
-		this.htmlText = htmlText;
-	}
+    public void setHtmlText(String htmlText) {
+        this.htmlText = htmlText;
+    }
 
-	public String getMarkDown() {
-		return markDown;
-	}
+    public String getMarkDown() {
+        return markDown;
+    }
 
-	public void setMarkDown(String markDown) {
-		this.markDown = markDown;
-	}
+    public void setMarkDown(String markDown) {
+        this.markDown = markDown;
+    }
 
-	public Boolean getUpdateable() {
-		return updateable;
-	}
+    public Boolean getUpdateable() {
+        return updateable;
+    }
 
-	public void setUpdateable(Boolean updateable) {
-		this.updateable = updateable;
-	}
+    public void setUpdateable(Boolean updateable) {
+        this.updateable = updateable;
+    }
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
 }

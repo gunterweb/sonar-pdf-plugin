@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- /* * Sonar PDF Plugin, open source plugin for Sonar * Copyright (C) 
-	2010-2014 klicap - ingenieria del puzle * Copyright (C) 2009 GMV-SGI * * 
-	Sonar PDF Plugin is free software; you can redistribute it and/or * modify 
-	it under the terms of the GNU Lesser General Public * License as published 
-	by the Free Software Foundation; either * version 3 of the License, or (at 
-	your option) any later version. * * Sonar is distributed in the hope that 
-	it will be useful, * but WITHOUT ANY WARRANTY; without even the implied warranty 
-	of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU * Lesser 
-	General Public License for more details. * * You should have received a copy 
-	of the GNU Lesser General Public * License along with Sonar; if not, write 
-	to the Free Software * Foundation, Inc., 51 Franklin Street, Fifth Floor, 
-	Boston, MA 02 */ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>org.sonarsource.parent</groupId>
 		<artifactId>parent</artifactId>
@@ -61,7 +47,7 @@
 			<email>fab.bontemps@gmail.com</email>
 			<organization>none</organization>
 			<url>http://www.google.com</url>
-			<roles>				
+			<roles>
 				<role>Developer</role>
 			</roles>
 			<timezone>+1</timezone>
