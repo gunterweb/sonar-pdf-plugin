@@ -24,25 +24,25 @@ import java.net.URL;
 import java.util.Properties;
 
 public abstract class SonarPDFTest {
-	protected static Properties configTest;
+    protected Properties configTest;
 
-	public SonarPDFTest() {
-		super();
-		URL resourceText = this.getClass().getClassLoader().getResource("test.properties");
-		if (resourceText == null) {
-			System.out.println("\nProblem loading test.propeties.");
-		} else {
-			configTest = new Properties();
-			try {
-				configTest.load(resourceText.openStream());
-			} catch (IOException e) {
-				System.out.println("\nProblem loading test.propeties.");
-			}
-		}
-	}
+    SonarPDFTest() {
+        super();
+        URL resourceText = this.getClass().getClassLoader().getResource("test.properties");
+        if (resourceText == null) {
+            System.out.println("\nProblem loading test.propeties.");
+        } else {
+            configTest = new Properties();
+            try {
+                configTest.load(resourceText.openStream());
+            } catch (IOException e) {
+                System.out.println("\nProblem loading test.propeties.");
+            }
+        }
+    }
 
-	protected String getPropertyForTest(String key) {
-		return configTest.getProperty(key);
-	}
+    protected String getPropertyForTest(String key) {
+        return configTest.getProperty(key);
+    }
 
 }

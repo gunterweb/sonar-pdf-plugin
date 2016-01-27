@@ -19,6 +19,8 @@
  */
 package org.sonar.report.pdf.entity;
 
+import java.util.Arrays;
+
 /**
  * This class provides the complexity distribution graphic.
  */
@@ -69,18 +71,18 @@ public class ComplexityDistribution implements Entity {
     }
 
     public String[] getxValues() {
-        return xValues;
+        return Arrays.copyOf(xValues, xValues.length);
     }
 
     public void setxValues(final String[] xValues) {
-        this.xValues = xValues;
+        this.xValues = Arrays.copyOf(xValues, xValues.length);
     }
 
     public String[] getyValues() {
-        return yValues;
+        return Arrays.copyOf(yValues, yValues.length);
     }
 
     public void setyValues(final String[] yValues) {
-        this.yValues = yValues;
+        this.yValues = Arrays.copyOf(yValues, yValues.length);
     }
 }

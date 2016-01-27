@@ -148,19 +148,23 @@ public class Issue implements Model {
     }
 
     public Date getCreationDate() {
-        return creationDate;
+        return (Date) creationDate.clone();
     }
 
     public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+        if (creationDate != null) {
+            this.creationDate = (Date) creationDate.clone();
+        }
     }
 
     public Date getUpdateDate() {
-        return updateDate;
+        return (Date) updateDate.clone();
     }
 
     public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
+        if (updateDate != null) {
+            this.updateDate = (Date) updateDate.clone();
+        }
     }
 
     public List<String> getTags() {

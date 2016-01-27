@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
@@ -144,7 +145,7 @@ public class HttpClient3Connector implements Connector {
         BufferedReader reader = null;
         try {
             final InputStream inputStream = method.getResponseBodyAsStream();
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+            reader = new BufferedReader(new InputStreamReader(inputStream, Charset.defaultCharset()));
             final StringBuilder sb = new StringBuilder();
             String line;
 

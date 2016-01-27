@@ -367,7 +367,11 @@ public class ProjectBuilder extends AbstractBuilder {
      * Container of issues
      *
      */
-    static class IssueBean {
+    static class IssueBean implements Serializable {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -1162084100076730465L;
         private Severity severity;
         private List<Issue> issues;
 
@@ -403,7 +407,7 @@ public class ProjectBuilder extends AbstractBuilder {
          * 
          */
         private static final long serialVersionUID = -8156307906104648499L;
-        transient Map<String, IssueBean> base;
+        Map<String, IssueBean> base;
 
         public ValueComparator(Map<String, IssueBean> base) {
             this.base = base;

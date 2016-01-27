@@ -78,11 +78,13 @@ public class Comment implements Model {
     }
 
     public Date getCreatedAt() {
-        return createdAt;
+        return (Date) createdAt.clone();
     }
 
     public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+        if (createdAt != null) {
+            this.createdAt = (Date) createdAt.clone();
+        }
     }
 
 }

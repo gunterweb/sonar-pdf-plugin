@@ -43,11 +43,13 @@ public class Measures implements Entity {
     }
 
     public Date getDate() {
-        return date;
+        return (Date) date.clone();
     }
 
     public void setDate(final Date date) throws ParseException {
-        this.date = date;
+        if (date != null) {
+            this.date = (Date) date.clone();
+        }
     }
 
     public String getVersion() {

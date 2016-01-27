@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
@@ -73,7 +74,7 @@ public class PDFGenerator {
     public void execute() {
         Properties config = new Properties();
         Properties configLang = new Properties();
-
+        InputStream configStream = null;
         try {
             if (sonarHostUrl != null) {
                 if (sonarHostUrl.endsWith("/")) {
@@ -82,7 +83,8 @@ public class PDFGenerator {
                 config.put(PDFResources.SONAR_BASE_URL, sonarHostUrl);
                 config.put(PDFResources.FRONT_PAGE_LOGO, "sonar.png");
             } else {
-                config.load(this.getClass().getResourceAsStream(REPORT_PROPERTIES));
+                configStream = this.getClass().getResourceAsStream(REPORT_PROPERTIES);
+                config.load(configStream);
             }
 
             ResourceBundle rb = ResourceBundle.getBundle(PDFResources.RESOURCE_NAME, Locale.getDefault(),
@@ -119,6 +121,14 @@ public class PDFGenerator {
                     + ".pdf on build output directory)");
         } catch (ReportException | IOException e) {
             LOG.error("Problem generating PDF file.", e);
+        } finally {
+            if (configStream != null) {
+                try {
+                    configStream.close();
+                } catch (IOException e) {
+                    LOG.error("Problem closing ResourceStream.", e);
+                }
+            }
         }
     }
 

@@ -196,21 +196,25 @@ public class Resource implements Model {
 
     @CheckForNull
     public Date getDate() {
-        return date;
+        return (Date) date.clone();
     }
 
-    public Resource setDate(@Nullable Date d) {
-        this.date = d;
+    public Resource setDate(@Nullable Date date) {
+        if (date != null) {
+            this.date = (Date) date.clone();
+        }
         return this;
     }
 
     @CheckForNull
     public Date getCreationDate() {
-        return creationDate;
+        return (Date) creationDate.clone();
     }
 
-    public Resource setCreationDate(@Nullable Date d) {
-        this.creationDate = d;
+    public Resource setCreationDate(@Nullable Date creationDate) {
+        if (creationDate != null) {
+            this.creationDate = (Date) creationDate.clone();
+        }
         return this;
     }
 
@@ -262,243 +266,163 @@ public class Resource implements Model {
         this.msr = msr;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod1Mode() {
         return period1Mode;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod1Mode(@Nullable String period1Mode) {
         this.period1Mode = period1Mode;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod2Mode() {
         return period2Mode;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod2Mode(@Nullable String period2Mode) {
         this.period2Mode = period2Mode;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod3Mode() {
         return period3Mode;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod3Mode(@Nullable String period3Mode) {
         this.period3Mode = period3Mode;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod4Mode() {
         return period4Mode;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod4Mode(@Nullable String period4Mode) {
         this.period4Mode = period4Mode;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod5Mode() {
         return period5Mode;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod5Mode(@Nullable String period5Mode) {
         this.period5Mode = period5Mode;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod1Param() {
         return period1Param;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod1Param(@Nullable String period1Param) {
         this.period1Param = period1Param;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod2Param() {
         return period2Param;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod2Param(@Nullable String period2Param) {
         this.period2Param = period2Param;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod3Param() {
         return period3Param;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod3Param(@Nullable String period3Param) {
         this.period3Param = period3Param;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod4Param() {
         return period4Param;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod4Param(@Nullable String period4Param) {
         this.period4Param = period4Param;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public String getPeriod5Param() {
         return period5Param;
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod5Param(@Nullable String period5Param) {
         this.period5Param = period5Param;
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public Date getPeriod1Date() {
-        return period1Date;
+        return (Date) period1Date.clone();
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod1Date(@Nullable Date period1Date) {
-        this.period1Date = period1Date;
+        if (period1Date != null) {
+            this.period1Date = (Date) period1Date.clone();
+        }
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public Date getPeriod2Date() {
-        return period2Date;
+        return (Date) period2Date.clone();
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod2Date(@Nullable Date period2Date) {
-        this.period2Date = period2Date;
+        if (period2Date != null) {
+            this.period2Date = (Date) period2Date.clone();
+        }
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public Date getPeriod3Date() {
-        return period3Date;
+        return (Date) period3Date.clone();
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod3Date(@Nullable Date period3Date) {
-        this.period3Date = period3Date;
+        if (period3Date != null) {
+            this.period3Date = (Date) period3Date.clone();
+        }
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public Date getPeriod4Date() {
-        return period4Date;
+        return (Date) period4Date.clone();
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod4Date(@Nullable Date period4Date) {
-        this.period4Date = period4Date;
+        if (period4Date != null) {
+            this.period4Date = (Date) period4Date.clone();
+        }
         return this;
     }
 
-    /**
-     * @since 2.5 only on projects, else null
-     */
     @CheckForNull
     public Date getPeriod5Date() {
-        return period5Date;
+        return (Date) period5Date.clone();
     }
 
-    /**
-     * @since 2.5
-     */
     public Resource setPeriod5Date(@Nullable Date period5Date) {
-        this.period5Date = period5Date;
+        if (period5Date != null) {
+            this.period5Date = (Date) period5Date.clone();
+        }
         return this;
     }
 

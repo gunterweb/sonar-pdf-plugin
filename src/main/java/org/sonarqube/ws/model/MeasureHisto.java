@@ -40,11 +40,13 @@ public class MeasureHisto implements Model, Comparable<MeasureHisto> {
     private List<String> values = new ArrayList<>();
 
     public Date getDate() {
-        return date;
+        return (Date) date.clone();
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        if (date != null) {
+            this.date = (Date) date.clone();
+        }
     }
 
     public List<String> getValues() {
