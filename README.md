@@ -20,7 +20,7 @@ The report contains:
 
 ## Installation
 
-1. Install the plugin through the [Update Center](http://docs.sonarqube.org/display/SONAR/Update+Center) or download it into the SONARQUBE_HOME/extensions/plugins directory
+1. Install the plugin into the SONARQUBE_HOME/extensions/plugins directory
 1. Restart SonarQube
 
 ## Usage
@@ -40,7 +40,7 @@ PDF report can be downloaded from the SonarQube GUI:
 TODO: [image]
 
 Issue tracking:
-https://jira.codehaus.org/browse/SONARPLUGINS/component/14372
+https://trello.com/sonarpdf
 
 CI builds:
-https://sonarplugins.ci.cloudbees.com/job/report-pdf
+https://travis-ci.org/gunterweb/sonar-pdf-plugin
