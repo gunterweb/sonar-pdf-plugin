@@ -7,11 +7,11 @@ jdk:
   - openjdk7
 
 script:
-  - mvn verify -B -e -V
+  - mvn clean install
 
 cache:
   directories:
     - '$HOME/.m2/repository'
 
 notifications:
-  email: false
+  email: fab.bontemps@gmail.com
