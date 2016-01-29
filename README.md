@@ -31,12 +31,12 @@ SonarQube PDF works as a post-job task. In this way, a PDF report is generated a
 
 You can skip report generation or select report type (executive or workbook) globally or at the project level. You can also provide an username/password if your project is secured by SonarQube user management:
 
-![Alt text](relative/path/to/img.jpg?raw=true "Plugin Configuration")
+![Plugin Configuration](configuration.jpg?raw=true "Plugin Configuration")
 
 ### Download the report
 
 PDF report can be downloaded from the SonarQube GUI:
-![Alt text](output.png?raw=true "PDF Report example")
+![PDF Report example](output.jpg?raw=true "PDF Report example")
 
 Issue tracking:
 https://trello.com/sonarpdf
