@@ -41,6 +41,8 @@ import org.sonar.report.pdf.util.FileUploader;
 @ExtensionPoint
 public class PDFPostJob implements PostJob, CheckProject {
 
+    private static final String PDF_EXTENSION = ".pdf";
+
     private static final Logger LOG = LoggerFactory.getLogger(PDFPostJob.class);
 
     public static final String SKIP_PDF_KEY = "sonar.pdf.skip";
@@ -90,7 +92,7 @@ public class PDFPostJob implements PostJob, CheckProject {
 
         generator.execute();
 
-        String path = fs.workDir().getAbsolutePath() + "/" + project.getEffectiveKey().replace(':', '-') + ".pdf";
+        String path = fs.workDir().getAbsolutePath() + "/" + project.getEffectiveKey().replace(':', '-') + PDF_EXTENSION;
 
         File pdf = new File(path);
         if (pdf.exists()) {
