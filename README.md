@@ -1,7 +1,7 @@
 Sonar PDF Report Plugin
 =========================
 
-[Compatibility and download information](http://update.sonarsource.org/plugins/pdfreport-confluence.html).
+Version compatbility : 5.3+. Use maven to build from repository
 
 ## Description / Features
 
