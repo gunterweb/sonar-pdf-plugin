@@ -24,7 +24,7 @@
 	<licenses>
 		<license>
 			<name>GNU LGPL 3</name>
-			<url>http://www.gnu.org/licenses/lgpl.txt</url>
+			<url>https://trello.com/sonarpdf</url>
 		</license>
 	</licenses>
 
@@ -64,11 +64,43 @@
 		<system>JIRA</system>
 		<url>http://jira.codehaus.org/browse/SONARPLUGINS/component/14372</url>
 	</issueManagement>
+	<distributionManagement>
+		<repository>
+			<id>localNexus</id>
+			<name>Local - releases</name>
+			<url>http://localhost:8083/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>localNexus</id>
+			<name>Local - releases</name>
+			<url>http://localhost:8083/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+		<site>
+			<id>pdf_sonar_site</id>
+			<name>Sonar PDF Site Server</name>
+			<url>ftp://xxxx</url>
+		</site>
+	</distributionManagement>
 
 	<properties>
 		<sonar.pluginName>PDF Report</sonar.pluginName>
 		<sonar.pluginClass>org.sonar.report.pdf.plugin.PDFReportPlugin</sonar.pluginClass>
 		<sonar.version>5.3</sonar.version>
+		<!-- dependencies versions -->
+		<itext.version>2.1.4</itext.version>
+		<httpclient.version>3.1</httpclient.version>
+		<sl4j.version>1.7.13</sl4j.version>
+		<dom4j.version>1.6.1</dom4j.version>
+		<jsr305.version>2.0.3</jsr305.version>
+		<gson.version>2.3.1</gson.version>
+		<json.version>1.1.1</json.version>
+		<httprequest.version>6.0</httprequest.version>
+		<mavenproject.version>2.0</mavenproject.version>
+		<testng.version>6.9.10</testng.version>
+		<logback.version>1.1.3</logback.version>
+		<!-- plugins versions -->
+		<sonar-plugin.version>2.3</sonar-plugin.version>
+		<sonar-packaging-maven-plugin.version>1.15</sonar-packaging-maven-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -81,12 +113,12 @@
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
-			<version>2.1.4</version>
+			<version>${itext.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
+			<version>${httpclient.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -97,27 +129,27 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.13</version>
+			<version>${sl4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
-			<version>1.6.1</version>
+			<version>${dom4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
-			<version>2.0.3</version>
+			<version>${jsr305.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.3.1</version>
+			<version>${gson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
+			<version>${json.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sonarsource.sonarqube</groupId>
@@ -128,25 +160,25 @@
 		<dependency>
 			<groupId>com.github.kevinsawicki</groupId>
 			<artifactId>http-request</artifactId>
-			<version>6.0</version>
+			<version>${httprequest.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-project</artifactId>
-			<version>2.0</version>
+			<version>${mavenproject.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
-			<version>6.9.10</version>
+			<version>${testng.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<scope>test</scope>
-			<version>1.1.3</version>
+			<version>${logback.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -160,11 +192,6 @@
 						<suiteXmlFile>src/test/config/testng.xml</suiteXmlFile>
 					</suiteXmlFiles>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.8</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -191,17 +218,16 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
-					<version>2.3</version>
+					<version>${sonar-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
 					<artifactId>sonar-packaging-maven-plugin</artifactId>
-					<version>1.15</version>
+					<version>${sonar-packaging-maven-plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
-
 	<profiles>
 		<profile>
 			<id>sonar-mysql-dev</id>

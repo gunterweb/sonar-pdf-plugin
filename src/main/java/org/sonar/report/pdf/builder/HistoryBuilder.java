@@ -90,7 +90,7 @@ public class HistoryBuilder extends AbstractBuilder {
 
                     oldValue = Double.valueOf(strVal);
                 } catch (NumberFormatException e) {
-                    LOG.error("Error formatting value " + strVal, e);
+                    LOG.debug("Error formatting value " + strVal  + " for key" + measureNode.getKey() , e);
                 }
             }
             if (oldValue != null && currentValue != null) {
