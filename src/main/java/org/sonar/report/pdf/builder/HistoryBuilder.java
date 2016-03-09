@@ -84,13 +84,15 @@ public class HistoryBuilder extends AbstractBuilder {
             List<MeasureHisto> measures = histos.get(0).getCells();
             Collections.sort(measures);
             Double oldValue = 0.0;
-            String strVal = measures.get(0).getValue();
-            if (strVal != null) {
-                try {
+            if (!measures.isEmpty()) {
+                String strVal = measures.get(0).getValue();
+                if (strVal != null) {
+                    try {
 
-                    oldValue = Double.valueOf(strVal);
-                } catch (NumberFormatException e) {
-                    LOG.debug("Error formatting value " + strVal  + " for key" + measureNode.getKey() , e);
+                        oldValue = Double.valueOf(strVal);
+                    } catch (NumberFormatException e) {
+                        LOG.debug("Error formatting value " + strVal + " for key" + measureNode.getKey(), e);
+                    }
                 }
             }
             if (oldValue != null && currentValue != null) {
