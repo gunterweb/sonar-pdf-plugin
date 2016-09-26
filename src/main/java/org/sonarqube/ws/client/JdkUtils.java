@@ -24,6 +24,9 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.annotation.CheckForNull;
@@ -117,5 +120,16 @@ public class JdkUtils extends WSUtils {
     @Override
     public Set<String> getFields(Object json) {
         return ((JSONObject) json).keySet();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, String> getFieldsWithValues(Object json) {
+        JSONObject jsonMap = (JSONObject) json;
+        Map<String, String> mapFromSet = new HashMap<>();
+        for (String entry : (Set<String>) jsonMap.keySet()) {
+            mapFromSet.put(entry, (String) jsonMap.get(entry));
+        }
+        return mapFromSet;
     }
 }

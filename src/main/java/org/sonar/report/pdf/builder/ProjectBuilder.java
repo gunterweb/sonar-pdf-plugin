@@ -136,6 +136,7 @@ public class ProjectBuilder extends AbstractBuilder {
 
             ResourceQuery resourceQueryChild = ResourceQuery.create(project.getKey());
             resourceQueryChild.setDepth(1);
+            resourceQueryChild.setQualifiers("BRC","PRJ");
             List<Resource> childNodes = sonar.findAll(resourceQueryChild);
 
             Iterator<Resource> it = childNodes.iterator();
@@ -147,7 +148,7 @@ public class ProjectBuilder extends AbstractBuilder {
                 Resource childNode = it.next();
 
                 String scope = childNode.getScope();
-                if (PDFResources.PROJECT_SCOPE.equals(scope)) {
+                if (PDFResources.PROJECT_SCOPE.equals(scope) && !projectKey.equals(childNode.getKey())) {
                     Project childProject = initializeProject(childNode.getKey());
                     project.getSubprojects().add(childProject);
                 }
@@ -214,8 +215,8 @@ public class ProjectBuilder extends AbstractBuilder {
                 LOG.debug("\t " + count + " " + severities[i] + " violations");
                 limit = limit - count;
             } else {
-                LOG.debug("There is not result on select //resources/resource");
-                LOG.debug("There are no violations with level " + severities[i]);
+                LOG.debug("There is no result on select //resources/resource");
+                LOG.info("There are no violations with level " + severities[i]);
             }
         }
         // sort the items of the map by list size
@@ -227,7 +228,7 @@ public class ProjectBuilder extends AbstractBuilder {
             RuleQuery query = RuleQuery.create(ruleKey);
             org.sonarqube.ws.model.Rules rules = sonar.find(query);
             if (rules == null || rules.getRules() == null || rules.getRules().size() != 1) {
-                LOG.error("There is not result on select rule from service");
+                LOG.error("There is no result on select rule from service");
             } else {
                 project.getMostViolatedRules().add(defineRule(entry, rules));
             }

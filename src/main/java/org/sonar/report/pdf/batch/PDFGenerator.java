@@ -74,8 +74,8 @@ public class PDFGenerator {
     public void execute() {
         Properties config = new Properties();
         Properties configLang = new Properties();
-        InputStream configStream = null;
-        try {
+
+        try (InputStream configStream = this.getClass().getResourceAsStream(REPORT_PROPERTIES)) {
             if (sonarHostUrl != null) {
                 if (sonarHostUrl.endsWith("/")) {
                     sonarHostUrl = sonarHostUrl.substring(0, sonarHostUrl.length() - 1);
@@ -83,7 +83,6 @@ public class PDFGenerator {
                 config.put(PDFResources.SONAR_BASE_URL, sonarHostUrl);
                 config.put(PDFResources.FRONT_PAGE_LOGO, "sonar.png");
             } else {
-                configStream = this.getClass().getResourceAsStream(REPORT_PROPERTIES);
                 config.load(configStream);
             }
 
@@ -121,14 +120,6 @@ public class PDFGenerator {
                     + ".pdf on build output directory)");
         } catch (ReportException | IOException e) {
             LOG.error("Problem generating PDF file.", e);
-        } finally {
-            if (configStream != null) {
-                try {
-                    configStream.close();
-                } catch (IOException e) {
-                    LOG.error("Problem closing ResourceStream.", e);
-                }
-            }
         }
     }
 

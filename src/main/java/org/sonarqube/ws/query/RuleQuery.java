@@ -38,8 +38,6 @@ public class RuleQuery extends Query<Rules> {
     private final Map<String, Serializable> params = new HashMap<>();
     public static final String BASE_URL = "/api/rules/search";
 
-    private String ruleKey;
-
     public RuleQuery(String ruleKey) {
         setRuleKey(ruleKey);
     }
@@ -53,12 +51,8 @@ public class RuleQuery extends Query<Rules> {
         return new RuleQuery(ruleKey);
     }
 
-    public String getRuleKey() {
-        return ruleKey;
-    }
-
-    public void setRuleKey(String ruleKey) {
-        this.ruleKey = ruleKey;
+    public RuleQuery setRuleKey(String ruleKey) {
+        return (RuleQuery) addParam("rule_key", ruleKey);
     }
 
     @Override

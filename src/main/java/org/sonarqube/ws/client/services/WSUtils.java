@@ -19,10 +19,11 @@
  */
 package org.sonarqube.ws.client.services;
 
-import javax.annotation.CheckForNull;
-
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.CheckForNull;
 
 /**
  * Compatibility layer between GWT and plain Java. Well, this is bad, because
@@ -37,7 +38,7 @@ public abstract class WSUtils {
         instance = utils;
     }
 
-    public static WSUtils getINSTANCE() {
+    public static WSUtils getInstance() {
         return instance;
     }
 
@@ -114,5 +115,10 @@ public abstract class WSUtils {
      * @return field names in specified JSON object
      */
     public abstract Set<String> getFields(Object json);
+    
+    /**
+     * @return fields in specified JSON object
+     */
+    public abstract Map<String, String> getFieldsWithValues(Object json);
 
 }

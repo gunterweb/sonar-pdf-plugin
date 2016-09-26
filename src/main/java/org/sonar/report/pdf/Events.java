@@ -42,6 +42,14 @@ public class Events extends PdfPageEventHelper {
     private Toc toc;
     private Header header;
 
+    /**
+     * Constructor
+     * 
+     * @param toc
+     *            toc
+     * @param header
+     *            header
+     */
     public Events(final Toc toc, final Header header) {
         this.toc = toc;
         this.header = header;

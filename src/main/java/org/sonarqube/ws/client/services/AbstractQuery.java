@@ -110,7 +110,7 @@ public abstract class AbstractQuery<M extends Model> implements Serializable {
      * Encodes single parameter value.
      */
     protected static String encode(String value) {
-        return WSUtils.getINSTANCE().encodeUrl(value);
+        return WSUtils.getInstance().encodeUrl(value);
     }
 
     /**
@@ -184,7 +184,7 @@ public abstract class AbstractQuery<M extends Model> implements Serializable {
             boolean includeTime) {
         if (paramValue != null) {
             String format = includeTime ? LONG_DATE_FORMAT : SHORT_DATE_FORMAT;
-            url.append(paramKey).append('=').append(encode(WSUtils.getINSTANCE().format(paramValue, format)))
+            url.append(paramKey).append('=').append(encode(WSUtils.getInstance().format(paramValue, format)))
                     .append('&');
         }
     }

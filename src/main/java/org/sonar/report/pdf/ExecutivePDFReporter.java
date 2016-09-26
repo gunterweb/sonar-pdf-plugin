@@ -26,8 +26,12 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.report.pdf.entity.FileInfo;
@@ -36,6 +40,7 @@ import org.sonar.report.pdf.entity.Rule;
 import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonar.report.pdf.util.Credentials;
 import org.sonar.report.pdf.util.MetricKeys;
+import org.sonarqube.ws.client.JdkUtils;
 
 import com.lowagie.text.Chapter;
 import com.lowagie.text.ChapterAutoNumber;
@@ -62,6 +67,8 @@ public class ExecutivePDFReporter extends PDFReporter {
      * 
      */
     private static final long serialVersionUID = -5378403769337739685L;
+
+    private static final String QUALITY_PROFILE_NAME = "name";
 
     private static final Logger LOG = LoggerFactory.getLogger(ExecutivePDFReporter.class);
 
@@ -133,14 +140,22 @@ public class ExecutivePDFReporter extends PDFReporter {
             title.addCell(new Phrase(projectRow, Style.FRONTPAGE_FONT_1));
             title.addCell(new Phrase(versionRow, Style.FRONTPAGE_FONT_1));
             title.addCell(new Phrase(descriptionRow, Style.FRONTPAGE_FONT_2));
-            title.addCell(new Phrase(super.getProject().getMeasure(MetricKeys.PROFILE).getDataValue(),
-                    Style.FRONTPAGE_FONT_3));
+            String qualityProfile = super.getProject().getMeasure(MetricKeys.PROFILE).getDataValue();
+            JSONParser parser = new JSONParser();
+            JSONArray json = (JSONArray) parser.parse(qualityProfile);
+            if (!json.isEmpty()) {
+                Map<String, String> properties = JdkUtils.getInstance().getFieldsWithValues(json.get(0));
+                if (properties.containsKey(QUALITY_PROFILE_NAME)) {
+                    title.addCell(new Phrase(properties.get(QUALITY_PROFILE_NAME), Style.FRONTPAGE_FONT_3));
+                }
+
+            }
             title.addCell(new Phrase(dateRow, Style.FRONTPAGE_FONT_3));
             title.setTotalWidth(pageSize.getWidth() - frontPageDocument.leftMargin() - frontPageDocument.rightMargin());
             title.writeSelectedRows(0, -1, frontPageDocument.leftMargin(), Style.FRONTPAGE_LOGO_POSITION_Y - 150,
                     frontPageWriter.getDirectContent());
 
-        } catch (IOException | DocumentException e) {
+        } catch (IOException | DocumentException | ParseException e) {
             LOG.error("Can not generate front page", e);
         }
     }
@@ -380,8 +395,8 @@ public class ExecutivePDFReporter extends PDFReporter {
         linesOfCodeTendency.getDefaultCell().setFixedHeight(Style.TENDENCY_ICONS_HEIGHT);
         linesOfCodeTendency
                 .addCell(new Phrase(project.getMeasure(MetricKeys.NCLOC).getFormatValue(), Style.DASHBOARD_DATA_FONT));
-        linesOfCodeTendency
-                .addCell(getTendencyImage(project.getMeasure(MetricKeys.DUPLICATED_LINES).getQualitativeTendency(), false));
+        linesOfCodeTendency.addCell(
+                getTendencyImage(project.getMeasure(MetricKeys.DUPLICATED_LINES).getQualitativeTendency(), false));
 
         linesOfCode.addCell(linesOfCodeTendency);
         linesOfCode.addCell(new Phrase(project.getMeasure(MetricKeys.DIRECTORIES).getFormatValue() + " "
@@ -390,12 +405,8 @@ public class ExecutivePDFReporter extends PDFReporter {
                 + getTextProperty(PDFResources.GENERAL_CLASSES), Style.DASHBOARD_DATA_FONT_2));
         linesOfCode.addCell(new Phrase(project.getMeasure(MetricKeys.FUNCTIONS).getFormatValue() + " "
                 + getTextProperty(PDFResources.GENERAL_METHODS), Style.DASHBOARD_DATA_FONT_2));
-        linesOfCode
-                .addCell(
-                        new Phrase(
-                                project.getMeasure(MetricKeys.DUPLICATED_LINES_DENSITY).getFormatValue() + " "
-                                        + getTextProperty(PDFResources.GENERAL_DUPLICATED_LINES),
-                                Style.DASHBOARD_DATA_FONT_2));
+        linesOfCode.addCell(new Phrase(project.getMeasure(MetricKeys.DUPLICATED_LINES_DENSITY).getFormatValue() + " "
+                + getTextProperty(PDFResources.GENERAL_DUPLICATED_LINES), Style.DASHBOARD_DATA_FONT_2));
 
         PdfPTable comments = new PdfPTable(1);
         Style.noBorderTable(comments);
@@ -422,18 +433,10 @@ public class ExecutivePDFReporter extends PDFReporter {
         complexityTendency.addCell(
                 getTendencyImage(project.getMeasure(MetricKeys.FUNCTION_COMPLEXITY).getQualitativeTendency(), false));
         complexity.addCell(complexityTendency);
-        complexity
-                .addCell(
-                        new Phrase(
-                                project.getMeasure(MetricKeys.CLASS_COMPLEXITY).getFormatValue() + " "
-                                        + getTextProperty(PDFResources.GENERAL_PER_CLASS),
-                                Style.DASHBOARD_DATA_FONT_2));
-        complexity
-                .addCell(
-                        new Phrase(
-                                project.getMeasure(MetricKeys.COMPLEXITY).getFormatValue() + " "
-                                        + getTextProperty(PDFResources.GENERAL_DECISION_POINTS),
-                                Style.DASHBOARD_DATA_FONT_2));
+        complexity.addCell(new Phrase(project.getMeasure(MetricKeys.CLASS_COMPLEXITY).getFormatValue() + " "
+                + getTextProperty(PDFResources.GENERAL_PER_CLASS), Style.DASHBOARD_DATA_FONT_2));
+        complexity.addCell(new Phrase(project.getMeasure(MetricKeys.COMPLEXITY).getFormatValue() + " "
+                + getTextProperty(PDFResources.GENERAL_DECISION_POINTS), Style.DASHBOARD_DATA_FONT_2));
 
         staticAnalysisTable.setSpacingBefore(10);
         staticAnalysisTable.addCell(linesOfCode);

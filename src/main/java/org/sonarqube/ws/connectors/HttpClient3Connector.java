@@ -137,10 +137,11 @@ public class HttpClient3Connector implements Connector {
     }
 
     private String getResponseBodyAsString(HttpMethod method) throws ConnectionException {
-        BufferedReader reader = null;
-        try {
-            final InputStream inputStream = method.getResponseBodyAsStream();
-            reader = new BufferedReader(new InputStreamReader(inputStream, Charset.defaultCharset()));
+
+        try (InputStream inputStream = method.getResponseBodyAsStream();
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(inputStream, Charset.defaultCharset()));) {
+
             final StringBuilder sb = new StringBuilder();
             String line;
 
@@ -152,14 +153,6 @@ public class HttpClient3Connector implements Connector {
         } catch (IOException e) {
             throw new ConnectionException("Can not read response", e);
 
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    LOG.error("Error closing reader", e);
-                }
-            }
         }
     }
 }

@@ -27,9 +27,7 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.report.pdf.builder.ComplexityDistributionBuilder;
 import org.sonar.report.pdf.builder.ProjectBuilder;
-import org.sonar.report.pdf.entity.ComplexityDistribution;
 import org.sonar.report.pdf.entity.Project;
 import org.sonar.report.pdf.entity.exception.ReportException;
 import org.sonar.report.pdf.util.Credentials;
@@ -184,10 +182,14 @@ public abstract class PDFReporter implements Serializable {
         } else {
             return null;
         }
+        // not usable from 6.0 version
+        /*
         ComplexityDistributionBuilder complexityDistributionBuilder = ComplexityDistributionBuilder
                 .getInstance(credentials.getUrl());
         ComplexityDistribution ccnDist = new ComplexityDistribution(data);
         return complexityDistributionBuilder.getGraphic(ccnDist);
+        */
+        return null;
     }
 
     public String getTextProperty(final String key) {
